@@ -1,0 +1,5 @@
+add tests for binding
+add .getGuts call (with different name)
+register utility and change clients to use it
+make sorting UI more discoverable
+add .renderExtra (poss. with different name) and change clients to use it

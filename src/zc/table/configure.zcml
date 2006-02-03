@@ -1,0 +1,9 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    >
+
+  <resourceLibrary name="zc.table">
+    <directory source="resources" include="sorting.js"/>
+  </resourceLibrary>
+
+</configure>
