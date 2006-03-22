@@ -146,10 +146,33 @@ class ColumnSortedItems(object):
     formatter = None
 
     def __init__(self, items, sort_on):
-        self.items = items
+        self._items = items
         self.sort_on = sort_on # tuple of (column name, reversed) pairs
-        self.cache = []
-        self.iter = None
+        self._cache = []
+        self._iterable = None
+
+    @property
+    def items(self):
+        if getattr(self._items, '__getitem__', None) is not None:
+            return self._items
+        else:
+            return self._iter()
+
+    def _iter(self):
+        # this design is intended to handle multiple simultaneous iterations
+        ix = 0
+        cache = self._cache
+        iterable = self._iterable
+        if iterable is None:
+            iterable = self._iterable = iter(self._items)
+        while True:
+            try:
+                yield cache[ix]
+            except IndexError:
+                next = iterable.next() # let StopIteration fall through
+                cache.append(next)
+                yield next
+            ix += 1
 
     def setFormatter(self, formatter):
         self.formatter = formatter
@@ -169,23 +192,20 @@ class ColumnSortedItems(object):
         if isinstance(key, slice):
             start = slice.start
             stop = slice.stop
-            stride = slice.stride
+            stride = slice.step
         else:
             start = stop = key
             stride = 1
 
+        items = self.items
         if not self.sort_on:
             try:
-                return self.items.__getitem__(key)
+                return items.__getitem__(key)
             except (AttributeError, TypeError):
-                res = []
                 if stride != 1:
                     raise NotImplemented
-
-                ix_offset = len(self.cache)
-                for ix, val in enumerate(self.items):
-                    ix += ix_offset
-                    self.cache.append(val)
+                res = []
+                for ix, val in enumerate(items):
                     if ix >= start:
                         res.append(val)
                     if ix >= stop:
@@ -199,7 +219,7 @@ class ColumnSortedItems(object):
                     raise IndexError, 'list index out of range'
 
         items = self.sorters[0](
-            self.items, self.formatter, start, stop, self.sorters[1:])
+            items, self.formatter, start, stop, self.sorters[1:])
 
         if isinstance(key, slice):
             return items[start:stop:stride]
@@ -208,31 +228,18 @@ class ColumnSortedItems(object):
 
     def __nonzero__(self):
         try:
-            iter(self).next()
+            iter(self.items).next()
         except StopIteration:
             return False
         return True
 
     def __iter__(self):
-        if self.iter is None:
-            if not self.sort_on:
-                self.iter = iter(self.items)
-            else:
-                self.iter = iter(self.sorters[0](
-                    self.items, self.formatter, 0, None, self.sorters[1:]))
-        ix = 0
-        cache = self.cache
-        while True:
-            try:
-                yield cache[ix]
-            except IndexError:
-                try:
-                    next = self.iter.next()
-                except StopIteration:
-                    break
-                cache.append(next)
-                yield next
-            ix += 1
+        if not self.sort_on:
+            return iter(self.items)
+        else:
+            sorters = self.sorters
+            return iter(sorters[0](
+                self.items, self.formatter, 0, None, sorters[1:]))
 
     def __len__(self):
         return len(self.items)
@@ -359,6 +366,9 @@ class AbstractSortFormatterMixin(object):
                             'alt="(sortable)"/>' % resource_path)
         sort_on_name = getSortOnName(self.prefix)
         script_name = self.script_name
+        return self._header_template(locals())
+
+    def _header_template(self, options):
         # The <img> below is intentionally not in the <span> because IE
         # doesn't underline it correctly when the CSS class is changed.
         # XXX can we avoid changing the className and get a similar effect?
@@ -370,8 +380,7 @@ class AbstractSortFormatterMixin(object):
                     onMouseOut="javascript: this.className='zc-table-sortable'">
                 %(header)s</span> %(dirIndicator)s
         """
-        return template % locals()
-
+        return template % options
 
 class StandaloneSortFormatterMixin(AbstractSortFormatterMixin):
     "A version of the sort formatter mixin for standalone tables, not forms"

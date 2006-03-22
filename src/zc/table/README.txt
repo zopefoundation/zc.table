@@ -83,7 +83,7 @@ instantiated with two required values and two optional values::
     name - (optional) the name of the column.  The title is used if a name is
            not specified.
 
-It includes a reasonable simple implementation of ISortableColumn but does
+It includes a reasonably simple implementation of ISortableColumn but does
 not declare the interface itself.  It tries to sort on the basis of the getter
 value and can be customized simply by overriding the `getSortKey` method.
 
@@ -1106,4 +1106,94 @@ above.
       </tr>
     </tbody>
     </table>
-    
+
+The sorting code is to be able to accept iterators as items, and only iterate
+through them as much as necessary to accomplish the tasks.  This needs to
+support multiple simultaneous iterations.  Another goal is to use the slice
+syntax to let sort implementations be guided as to where precise sorting is
+needed, in case n-best or other approaches can be used.
+
+There is some trickiness about this in the implementation, and this part of
+the document tries to explore some of the edge cases that have proved
+problematic in the field.
+
+In particular, we should examine using an iterator in sorted and unsorted
+configurations within a sorting table formatter, with batching.
+
+Unsorted:
+
+    >>> formatter = table.SortingFormatter(
+    ...     context, request, iter(items), ('First', 'Third'),
+    ...     columns=columns, batch_size=2)
+    >>> formatter.items[0] is not None # artifically provoke error :-(
+    True
+    >>> print formatter()
+    <table>
+    <thead>
+      <tr>
+        <th>
+          First
+        </th>
+        <th>
+          Third
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          a0
+        </td>
+        <td>
+          c0
+        </td>
+      </tr>
+      <tr>
+        <td>
+          a2
+        </td>
+        <td>
+          c2
+        </td>
+      </tr>
+    </tbody>
+    </table>
+
+Sorted:
+
+    >>> formatter = table.SortingFormatter(
+    ...     context, request, iter(items), ('First', 'Third'),
+    ...     columns=columns, sort_on=(('Second', True),), batch_size=2)
+    >>> formatter.items[0] is not None # artifically provoke error :-(
+    True
+    >>> print formatter()
+    <table>
+    <thead>
+      <tr>
+        <th>
+          First
+        </th>
+        <th>
+          Third
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          a2
+        </td>
+        <td>
+          c2
+        </td>
+      </tr>
+      <tr>
+        <td>
+          a1
+        </td>
+        <td>
+          c1
+        </td>
+      </tr>
+    </tbody>
+    </table>
