@@ -26,6 +26,7 @@ import zc.resourcelibrary
 class Formatter(object):
     interface.implements(interfaces.IFormatter)
     items = None
+
     def __init__(self, context, request, items, visible_column_names=None,
                  batch_start=None, batch_size=None, prefix=None, columns=None):
         self.context = context
@@ -44,6 +45,7 @@ class Formatter(object):
         self.batch_start = batch_start
         self.batch_size = batch_size
         self.prefix = prefix
+        self.cssClasses = {}
 
     def setItems(self, items):
         self.items = items
@@ -56,28 +58,35 @@ class Formatter(object):
             res[col.name] = col
         return res
 
+    def _getCSSClass(self, element):
+        klass = self.cssClasses.get(element)
+        return klass and ' class=%s' % quoteattr(klass) or ''
+
     def __call__(self):
-        return '\n<table>\n%s</table>\n%s' % (
-                self.renderContents(), self.renderExtra())
+        return '\n<table%s>\n%s</table>\n%s' % (
+                self._getCSSClass('table'), self.renderContents(),
+                self.renderExtra())
 
     def renderExtra(self):
         zc.resourcelibrary.need('zc.table')
         return ''
 
     def renderContents(self):
-        return '  <thead>\n%s  </thead>\n  <tbody>\n%s  </tbody>\n' % (
-                self.renderHeaderRow(), self.renderRows())
+        return '  <thead%s>\n%s  </thead>\n  <tbody>\n%s  </tbody>\n' % (
+                self._getCSSClass('thead'), self.renderHeaderRow(),
+                self.renderRows())
 
     def renderHeaderRow(self):
-        return '    <tr>\n%s    </tr>\n' % self.renderHeaders()
+        return '    <tr%s>\n%s    </tr>\n' %(
+            self._getCSSClass('tr'), self.renderHeaders())
 
     def renderHeaders(self):
         return ''.join(
             [self.renderHeader(col) for col in self.visible_columns])
 
     def renderHeader(self, column):
-        return '      <th>\n        %s\n      </th>\n' % (
-            self.getHeader(column),)
+        return '      <th%s>\n        %s\n      </th>\n' % (
+            self._getCSSClass('th'), self.getHeader(column))
 
     def getHeaders(self):
         return [self.getHeader(column) for column in self.visible_columns]
@@ -94,15 +103,16 @@ class Formatter(object):
                    for column in self.visible_columns]
 
     def renderRow(self, item):
-        return '  <tr>\n%s  </tr>\n' % self.renderCells(item)
+        return '  <tr%s>\n%s  </tr>\n' % (
+            self._getCSSClass('tr'), self.renderCells(item))
 
     def renderCells(self, item):
         return ''.join(
             [self.renderCell(item, col) for col in self.visible_columns])
 
     def renderCell(self, item, column):
-        return '    <td>\n      %s\n    </td>\n' % (
-            self.getCell(item, column),)
+        return '    <td%s>\n      %s\n    </td>\n' % (
+            self._getCSSClass('td'), self.getCell(item, column),)
 
     def getCells(self, item):
         return [self.getCell(item, column) for column in self.visible_columns]
@@ -450,8 +460,11 @@ class AlternatingRowFormatterMixin(object):
 
     def renderRow(self, item):
         self.row += 1
+        klass = self.cssClasses.get('tr', '')
+        if klass:
+            klass += ' '
         return '  <tr class=%s>\n%s  </tr>\n' % (
-            quoteattr(self.row_classes[self.row % 2]),
+            quoteattr(klass + self.row_classes[self.row % 2]),
             self.renderCells(item))
 
 

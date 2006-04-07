@@ -45,7 +45,7 @@ columns used for a table formatter.
 
 `renderHeader` takes a formatter--the table formatter introduced in the section
 immediately below this one.  It has the responsibility of rendering the
-contents of the header for the column.  `renderCell` takes the item to be 
+contents of the header for the column.  `renderCell` takes the item to be
 rendered and the formatter, and is responsible for returning the cell contents
 for the given item.
 
@@ -54,10 +54,10 @@ values.  The context and request are particularly important.
 
 Columns may also support sorting by implementing the ISortableColumn interface.
 This interface is comprised of two methods, `sort` and `reversesort`.  Both
-take the same rather large set of arguments: items, formatter, start, stop, 
-and sorters.  At least two values should be unsurprising: the `items` are the 
+take the same rather large set of arguments: items, formatter, start, stop,
+and sorters.  At least two values should be unsurprising: the `items` are the
 items to be sorted, the `formatter` is the table formatter.  The `start` and
-`stop` values are the values that are needed for the rendering, so some 
+`stop` values are the values that are needed for the rendering, so some
 implementations may be able to optimize to only give precise results for the
 given range.  The `sorters` are optional sub-sorters--callables with signatures
 identical to `sort` and `reversesort` that are a further sort refinement that
@@ -66,15 +66,15 @@ more values that will sort identically, the column might take advantage of any
 sub-sorters to further sort the data.
 
 The columns.py file has a number of useful base column classes.  The
-columns.txt file discusses some of them.  For our examples here, we will use 
+columns.txt file discusses some of them.  For our examples here, we will use
 the relatively simple and versatile zc.table.column.GetterColumn.  It is
 instantiated with two required values and two optional values::
 
     title - (required) the title of the column.
-    
+
     getter - (required) a callable that is passed the item and the table
              formatter; returns the value used in the cell.
-        
+
     cell_formatter - (optional) a callable that is passed the result of getter,
                       the item, and the table formatter; returns the formatted
                       HTML.  defaults to a function that returns the result of
@@ -111,7 +111,7 @@ them::
 Formatters
 ==========
 
-When a sequence of objects are to be turned into an HTML table, a 
+When a sequence of objects are to be turned into an HTML table, a
 table.Formatter is used.  The table package includes a simple implementation
 of IFormatter as well as a few important variations.
 
@@ -119,7 +119,7 @@ The default Formatter is instantiated with three required arguments--
 `context`, `request`, and `items`--and a long string of optional arguments
 we'll discuss in a moment.  The first two required arguments are reminiscent
 of browser views--and in fact, a table formatter is a specialized browser
-view.  The `context` is the object for which the table formatter is being 
+view.  The `context` is the object for which the table formatter is being
 rendered, and can be important to various columns; and the `request` is the
 current request.  The `items` are the full set of items on which the table will
 give a view.
@@ -135,8 +135,8 @@ as sorting, discussed for a couple of Formatter subclasses below.
 batch_start is the item position the table should begin to render.  batch_size
 is the number of items the table should render; 0 means all.
 
-The next optional argument, `prefix=None`, is particularly important when a 
-table formatter is used within a form: it sets a prefix for any form fields 
+The next optional argument, `prefix=None`, is particularly important when a
+table formatter is used within a form: it sets a prefix for any form fields
 and XML identifiers generated for the table or a contained element::
 
 The last optional argument is the full set of columns for the table (not just
@@ -168,7 +168,7 @@ exercise, we'll hide the second column.
     ...     interfaces.IFormatter, formatter)
     True
 
-The simplest way to use a table formatter is to call it, asking the formatter 
+The simplest way to use a table formatter is to call it, asking the formatter
 to render the entire table::
 
     >>> print formatter()
@@ -247,8 +247,29 @@ column with cells in a special class:
     <tr class="odd"><td class="first_column">a1<td><td>c1<td></tr>
     </table>
 
+However, the formatter provides some simple support for style sheets, since it
+is the most common form of customization. Each formatter has an attribute
+called ``cssClasses``, which is a mapping from HTML elements to CSS
+classes. As you saw above, by default there are no CSS classes registered for
+the formatter. Let's now register one for the "table" element:
+
+    >>> formatter.cssClasses['table'] = 'list'
+    >>> print formatter()
+    <table class="list">
+    ...
+    </table>
+
+This can be done for every element used in the table. Of course, you can also
+unregister the class again:
+
+    >>> del formatter.cssClasses['table']
+    >>> print formatter()
+    <table>
+    ...
+    </table>
+
 If you are going to be doing a lot of this sort of thing (or if this approach
-is more your style), a subclass of Formatter might be in order--but that 
+is more your style), a subclass of Formatter might be in order--but that
 is jumping the gun a bit.  See the section about subclasses below.
 
 Columns are typically defined for a class and reused across requests.
@@ -383,7 +404,7 @@ advanced column types.
 Formatter Subclasses
 ====================
 
-The Formatter is useful, but lacks some features you may need.  The 
+The Formatter is useful, but lacks some features you may need.  The
 factoring is such that, typically, overriding just a few methods can easily
 provide what you need.  The table module provides a few examples of these
 subclasses.  While the names are sometimes a bit unwieldy, the functionality is
@@ -392,7 +413,7 @@ useful.
 AlternatingRowFormatter
 -----------------------
 
-The AlternatingRowFormatter is the simplest subclass, offering an 
+The AlternatingRowFormatter is the simplest subclass, offering an
 odd-even row formatter that's very easy to use::
 
     >>> formatter = table.AlternatingRowFormatter(
@@ -437,7 +458,7 @@ odd-even row formatter that's very easy to use::
     </tbody>
     </table>
 
-If you want different classes other than "even" and "odd" then simply 
+If you want different classes other than "even" and "odd" then simply
 define `row_classes` on your instance: the default is a tuple of "even" and
 "odd", but "green" and "red" will work as well:
 
@@ -482,15 +503,61 @@ define `row_classes` on your instance: the default is a tuple of "even" and
     </tbody>
     </table>
 
+Note that this formatter also plays nicely with the other CSS classes defined
+by the formatter:
+
+    >>> formatter.cssClasses['tr'] = 'list'
+    >>> print formatter()
+    <table>
+      <thead>
+        <tr class="list">
+          <th>
+            First
+          </th>
+          <th>
+            Third
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr class="list green">
+        <td>
+          a0
+        </td>
+        <td>
+          c0
+        </td>
+      </tr>
+      <tr class="list red">
+        <td>
+          a2
+        </td>
+        <td>
+          c2
+        </td>
+      </tr>
+      <tr class="list green">
+        <td>
+          a1
+        </td>
+        <td>
+          c1
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+
 SortingFormatter
 ----------------
 
-``SortingFormatter`` support ISortableColumn instances by asking them to
-sort using the ISortableColumn interface described above.  Instantiating one
-takes a new final optional argument, `sort_on`, which is a sequence of tuple 
-pairs of (column name string, reverse sort boolean) in which the first pair is
-the primary sort.  Here's an example.  Notice that we are sorting on the hidden
-column--this is acceptable, and not even all that unlikely to encounter.
+``SortingFormatter`` supports ``ISortableColumn`` instances by asking them to
+sort using the ``ISortableColumn`` interface described above.  Instantiating
+one takes a new final optional argument, ``sort_on``, which is a sequence of
+tuple pairs of (column name string, reverse sort boolean) in which the first
+pair is the primary sort.  Here's an example.  Notice that we are sorting on
+the hidden column--this is acceptable, and not even all that unlikely to
+encounter.
 
     >>> formatter = table.SortingFormatter(
     ...     context, request, items, ('First', 'Third'), columns=columns,
@@ -730,9 +797,9 @@ StandaloneSortFormatter and FormSortFormatter
 The sorting table formatter takes care of the sorting back end, but it's
 convenient to encapsulate a bit of the front end logic as well, to provide
 columns with clickable headers for sorting and so on without having to write
-the code every time you need the behavior.  Two subclasses of 
-SortingFormatter provide this capability.  The 
-StandaloneSortFormatter is useful for tables that are not parts of a 
+the code every time you need the behavior.  Two subclasses of
+SortingFormatter provide this capability.  The
+StandaloneSortFormatter is useful for tables that are not parts of a
 form, while the FormSortFormatter is designed to fit within a form.
 
 Both versions look at the request to examine what the user has requested be
@@ -765,7 +832,7 @@ be no sorting information.
                         onMouseOver="javascript: this.className='sortable zc-table-sortable'"
                         onMouseOut="javascript: this.className='zc-table-sortable'">
                     Third</span>...
-        </th> 
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -800,7 +867,7 @@ be no sorting information.
 Setting a prefix also affects the value used to store the sorting information.
 
     >>> formatter = table.FormSortFormatter(
-    ...     context, request, items, ('First', 'Third'), 
+    ...     context, request, items, ('First', 'Third'),
     ...     prefix='slot.first', columns=columns)
     >>> sort_on_name = table.getSortOnName(formatter.prefix)
     >>> print formatter()
@@ -822,7 +889,7 @@ Setting a prefix also affects the value used to store the sorting information.
                         onMouseOver="javascript: this.className='sortable zc-table-sortable'"
                         onMouseOut="javascript: this.className='zc-table-sortable'">
                     Third</span>...
-        </th> 
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -860,7 +927,7 @@ the second column in reverse order.
 
     >>> request.form[sort_on_name] = ['Second', 'Second']
     >>> formatter = table.FormSortFormatter(
-    ...     context, request, items, ('First', 'Third'), 
+    ...     context, request, items, ('First', 'Third'),
     ...     prefix='slot.first', columns=columns)
     >>> print formatter()
     <table>
@@ -881,7 +948,7 @@ the second column in reverse order.
                         onMouseOver="javascript: this.className='sortable zc-table-sortable'"
                         onMouseOut="javascript: this.className='zc-table-sortable'">
                     Third</span>...
-        </th> 
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -931,7 +998,7 @@ search.
     ...     prefix='slot.first', sort_on=(('Second', False), ('Third', True)))
     >>> interfaces.IColumnSortedItems.providedBy(formatter.items)
     True
-    >>> zope.interface.verify.verifyObject(interfaces.IColumnSortedItems, 
+    >>> zope.interface.verify.verifyObject(interfaces.IColumnSortedItems,
     ...                                    formatter.items)
     True
     >>> formatter.items.sort_on
@@ -956,7 +1023,7 @@ search.
                         onMouseOver="javascript: this.className='sortable zc-table-sortable'"
                         onMouseOut="javascript: this.className='zc-table-sortable'">
                     Third</span>...
-        </th> 
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -1015,7 +1082,7 @@ search.
 The standalone non-form version uses almost all the same code but doesn't
 draw the hidden field and calls a different JavaScript function (which puts the
 sorting information in the query string rather than in a form field).  Here's a
-quick copy of the example above, modified to use the standalone version.  
+quick copy of the example above, modified to use the standalone version.
 Because of the way the query string is used, more than two instances of a
 column name may appear in the form field, so this is emulated in the example.
 
@@ -1052,7 +1119,7 @@ above.
                         onMouseOver="javascript: this.className='sortable zc-table-sortable'"
                         onMouseOut="javascript: this.className='zc-table-sortable'">
                     Third</span>...
-        </th> 
+        </th>
       </tr>
     </thead>
     <tbody>

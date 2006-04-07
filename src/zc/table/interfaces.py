@@ -58,33 +58,33 @@ class ISortableColumn(interface.Interface):
 
     def sort(items, formatter, start, stop, sorters):
         """Return a list of items in sorted order.
-        
+
         Formatter is passed to aid calculation of sort parameters.  Start and
-        stop are passed in order to provide a hint as to the range needed, if 
-        the algorithm can optimize.  Sorters are a list of zero or more 
+        stop are passed in order to provide a hint as to the range needed, if
+        the algorithm can optimize.  Sorters are a list of zero or more
         sub-sort callables with the same signature which may be used if
         desired to sub-sort values with equivalent sort values according
         to this column.
-        
+
         The original items sequence should not be mutated."""
 
     def reversesort(items, formatter, start, stop, sorters):
         """Return a list of items in reverse sorted order.
-        
+
         Formatter is passed to aid calculation of sort parameters.  Start and
-        stop are passed in order to provide a hint as to the range needed, if 
-        the algorithm can optimize.  Sorters are a list of zero or more 
-        sub-sort callables with the same signature as this method, which may 
-        be used if desired to sub-sort values with equivalent sort values 
+        stop are passed in order to provide a hint as to the range needed, if
+        the algorithm can optimize.  Sorters are a list of zero or more
+        sub-sort callables with the same signature as this method, which may
+        be used if desired to sub-sort values with equivalent sort values
         according to this column.
-        
+
         The original items sequence should not be mutated."""
 
 class IColumnSortedItems(interface.Interface):
     """items that support sorting by column.  setFormatter must be called
     with the formatter to be used before methods work.  This is typically done
     in a formatter's __init__"""
-    
+
     sort_on = interface.Attribute(
         """list of (colmun name, reversed boolean) beginning with the primary
         sort column.""")
@@ -101,6 +101,7 @@ class IColumnSortedItems(interface.Interface):
 
     def setFormatter(formatter):
         "tell the items about the formatter before using any of the methods"
+
 
 class IFormatter(interface.Interface):
 
@@ -176,86 +177,91 @@ class IFormatter(interface.Interface):
         title=u'Columns by Name',
         description=u'A mapping of column name to column object')
 
+    cssClasses = schema.Dict(
+        title=u'CSS Classes',
+        description=u'A mapping from an HTML element to a CSS class',
+        key_type=schema.TextLine(title=u'The HTML element name'),
+        value_type=schema.TextLine(title=u'The CSS class name'))
+
     def __call__():
         """Render a complete HTML table from self.items."""
 
     def renderHeaderRow():
         """Render an HTML table header row from the column headers.
-        
+
         Uses renderHeaders."""
 
     def renderHeaders():
         """Render the individual HTML headers from the columns.
-        
+
         Uses renderHeader."""
 
     def renderHeader(column):
         """Render a header for the given column.
-        
+
         Uses getHeader."""
 
     def getHeader(column):
         """Render header contents for the given column.
-        
+
         Includes appropriate code for enabling ISortableColumn.
-        
+
         Uses column.renderHeader"""
 
     def getHeaders():
         """Retrieve a sequence of rendered column header contents.
-        
+
         Uses getHeader.
-        
+
         Available for more low-level use of a table; not used by the other
         table code."""
 
     def renderRows():
         """Render HTML rows for the self.items.
-        
+
         Uses renderRow and getItems."""
 
     def getRows():
         """Retrieve a sequence of sequences of rendered cell contents.
-        
+
         Uses getCells and getItems.
-        
+
         Available for more low-level use of a table; not used by the other
         table code."""
 
     def getCells(item):
         """Retrieve a sequence rendered cell contents for the item.
-        
+
         Uses getCell.
-        
+
         Available for more low-level use of a table; not used by the other
         table code."""
 
     def getCell(item, column):
         """Render the cell contents for the item and column."""
-    
+
     def renderRow(item):
         """Render a row for the given item.
-        
+
         Uses renderCells."""
-    
+
     def renderCells(item):
         """Render the cells--the contents of a row--for the given item.
-        
+
         Uses renderCell."""
-    
+
     def renderCell(item, column):
         """Render the cell for the item and column.
-        
+
         Uses getCell."""
 
     def getItems():
         """Returns the items to be rendered from the full set of self.items.
-        
+
         Should be based on batch_start and batch_size, if set.
         """
 
-
 class IFormatterFactory(interface.Interface):
     """When called returns a table formatter.
-    
+
     Takes the same arguments as zc.table.table.Formatter"""
