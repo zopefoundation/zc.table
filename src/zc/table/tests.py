@@ -17,7 +17,7 @@ $Id: tests.py 4428 2005-12-13 23:35:48Z gary $
 """
 import unittest
 from zope import component
-from zope.app.tests import placelesssetup
+from zope.app.testing import placelesssetup
 import zope.publisher.interfaces.browser
 import zope.schema.interfaces
 import zope.app.form.browser
