@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="zc.table",
-    version="0.5",
+    version="0.5.1",
     install_requires=['zc.resourcelibrary >= 0.5'],
     dependency_links=['http://download.zope.org/distribution/',],
     packages=find_packages('src', exclude=["*.tests", "*.ftests"]),
