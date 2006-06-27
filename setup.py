@@ -12,7 +12,7 @@ setup(
     namespace_packages=['zc'],
     package_data = {
     '': ['*.txt', '*.zcml', '*.gif', '*.js'],
-    'zc.table':['resources/*'],
+    'zc.table':['resources/*', '*.pt'],
     },
 
     zip_safe=False,
