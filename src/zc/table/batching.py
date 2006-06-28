@@ -33,7 +33,7 @@ class Formatter(zc.table.table.FormSortFormatterMixin,
             batch_size = 20
 
         if prefix is None:
-            prefix = 'zc.intranet.table'
+            prefix = 'zc.table'
 
         super(Formatter, self).__init__(
             context, request, items, visible_column_names,
