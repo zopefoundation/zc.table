@@ -358,21 +358,17 @@ class AbstractSortFormatterMixin(object):
         else:
             sortColumnName = sortReversed = None
         if columnName == sortColumnName:
-            path = component.getAdapter(self.request, name='zc.table')()
             if sortReversed:
                 dirIndicator = ('<img src="%s/sort_arrows_up.gif" '
-                                'style="vertical-align: top; '
-                                'margin-top: 0px" '
+                                'class="sort-indicator" '
                                 'alt="(ascending)"/>' % resource_path)
             else:
                 dirIndicator = ('<img src="%s/sort_arrows_down.gif" '
-                                'style="vertical-align: top; '
-                                'margin-top: 0px" '
+                                'class="sort-indicator" '
                                 'alt="(descending)"/>' % resource_path)
         else:
             dirIndicator = ('<img src="%s/sort_arrows.gif" '
-                            'style="vertical-align: top; '
-                            'margin-top: 0px" '
+                            'class="sort-indicator" '
                             'alt="(sortable)"/>' % resource_path)
         sort_on_name = getSortOnName(self.prefix)
         script_name = self.script_name
