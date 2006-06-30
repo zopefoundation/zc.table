@@ -18,10 +18,7 @@ setup(
     zip_safe=False,
     author='Zope Project',
     author_email='zope3-dev@zope.org',
-    description="""\
-This is a Zope 3 extension that helps with the construction of (HTML) tables.
-Features include dynamic HTML table generation, batching and sorting.
-""",
+    description=open("README.txt").read(),
     license='ZPL',
     keywords="zope zope3",
     )
