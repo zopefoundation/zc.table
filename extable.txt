@@ -1,0 +1,419 @@
+==========================
+Table Formatter Extensions
+==========================
+
+This doctest documents the table formatter extensions provided in the
+``extable`` module. Here is a data set that we would like to show:
+
+  >>> class DataItem(object):
+  ...     def __init__(self, numeric, roman, word):
+  ...         self.numeric = numeric
+  ...         self.roman = roman
+  ...         self.word = word
+
+  >>> items = [
+  ...     DataItem('1', 'I',   'one'),
+  ...     DataItem('2', 'II',  'two'),
+  ...     DataItem('3', 'III', 'three'),
+  ... ]
+
+We also need some columns:
+
+  >>> from zc.table import column
+  >>> columns = [
+  ...     column.GetterColumn(u'Numeric', lambda i,f: i.numeric, name='num'),
+  ...     column.GetterColumn(u'Roman', lambda i,f: i.roman, name='roman'),
+  ...     column.GetterColumn(u'Word', lambda i,f: i.word, name='word'),
+  ... ]
+
+Finally, let's set up some other helpers:
+
+  >>> import zope.publisher.browser
+  >>> request = zope.publisher.browser.TestRequest()
+  >>> context = None
+
+
+Selected Item Formatter
+-----------------------
+
+The selected item formatter allows you to specify a single item of values that
+is to be marked as selected. It simply adds the CSS class "selected" to the
+appropriate ``<tr>`` element.
+
+  >>> from zc.table import extable
+  >>> formatter = extable.SelectedItemFormatterMixin(
+  ...     context, request, items, columns=columns)
+
+  >>> print formatter()
+  <BLANKLINE>
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Numeric
+        </th>
+        <th>
+          Roman
+        </th>
+        <th>
+          Word
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+      <td>
+        1
+      </td>
+      <td>
+        I
+      </td>
+      <td>
+        one
+      </td>
+    </tr>
+    <tr class="even">
+      <td>
+        2
+      </td>
+      <td>
+        II
+      </td>
+      <td>
+        two
+      </td>
+    </tr>
+    <tr class="odd">
+      <td>
+        3
+      </td>
+      <td>
+        III
+      </td>
+      <td>
+        three
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <BLANKLINE>
+
+Let's now select an item:
+
+  >>> formatter.selectedItem = items[1]
+  >>> print formatter()
+  <BLANKLINE>
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Numeric
+        </th>
+        <th>
+          Roman
+        </th>
+        <th>
+          Word
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+      <td>
+        1
+      </td>
+      <td>
+        I
+      </td>
+      <td>
+        one
+      </td>
+    </tr>
+    <tr class="even selected">
+      <td>
+        2
+      </td>
+      <td>
+        II
+      </td>
+      <td>
+        two
+      </td>
+    </tr>
+    <tr class="odd">
+      <td>
+        3
+      </td>
+      <td>
+        III
+      </td>
+      <td>
+        three
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <BLANKLINE>
+
+Possible Improvement: Allow multiple items to be selected by making the
+attribute ``selectedItem`` a sequence and be called ``selectedItems``.
+
+
+CSS Column Formatter
+--------------------
+
+The standard formatter provides no facilities to select columns, but selecting
+columns is interesting in many ways, for example, when you sort a particular
+column. You can also use this base class to simulate alternating *columns*.
+
+  >>> from zc.table import table
+
+  >>> class CSSColumnFormatter(extable.CSSColumnFormatterMixin,
+  ...                          table.Formatter):
+  ...     pass
+
+  >>> formatter = CSSColumnFormatter(context, request, items, columns=columns)
+  >>> print formatter()
+  <BLANKLINE>
+  <table>
+    <thead>
+      <tr>
+        <th class="">
+          Numeric
+        </th>
+        <th class="">
+          Roman
+        </th>
+        <th class="">
+          Word
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td class="">
+        1
+      </td>
+      <td class="">
+        I
+      </td>
+      <td class="">
+        one
+      </td>
+    </tr>
+    <tr>
+      <td class="">
+        2
+      </td>
+      <td class="">
+        II
+      </td>
+      <td class="">
+        two
+      </td>
+    </tr>
+    <tr>
+      <td class="">
+        3
+      </td>
+      <td class="">
+        III
+      </td>
+      <td class="">
+        three
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <BLANKLINE>
+
+To selection a CSS class for a particular column, you simply fill out the
+formatter's ``columnCSS`` dictionary. The key is the column name and the value
+the entry for the CSS class.
+
+  >>> formatter.columnCSS['roman'] = 'selected'
+  >>> print formatter()
+  <BLANKLINE>
+  <table>
+    <thead>
+      <tr>
+        <th class="">
+          Numeric
+        </th>
+        <th class="selected">
+          Roman
+        </th>
+        <th class="">
+          Word
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td class="">
+        1
+      </td>
+      <td class="selected">
+        I
+      </td>
+      <td class="">
+        one
+      </td>
+    </tr>
+    <tr>
+      <td class="">
+        2
+      </td>
+      <td class="selected">
+        II
+      </td>
+      <td class="">
+        two
+      </td>
+    </tr>
+    <tr>
+      <td class="">
+        3
+      </td>
+      <td class="selected">
+        III
+      </td>
+      <td class="">
+        three
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <BLANKLINE>
+
+
+Possible Improvement: Make the values of the ``cssColumn`` attribute a list,
+so that applications can rely on simply appending to the list.
+
+
+Width Specification Formatter
+-----------------------------
+
+One of the simplest missing features was the support for specifying the column
+width.
+
+  >>> class WidthSpecificationFormatter(
+  ...     extable.WidthSpecificationFormatterMixin, table.Formatter):
+  ...     pass
+
+  >>> formatter = WidthSpecificationFormatter(
+  ...     context, request, items, columns=columns)
+  >>> print formatter()
+  <BLANKLINE>
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Numeric
+        </th>
+        <th>
+          Roman
+        </th>
+        <th>
+          Word
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>
+        1
+      </td>
+      <td>
+        I
+      </td>
+      <td>
+        one
+      </td>
+    </tr>
+    <tr>
+      <td>
+        2
+      </td>
+      <td>
+        II
+      </td>
+      <td>
+        two
+      </td>
+    </tr>
+    <tr>
+      <td>
+        3
+      </td>
+      <td>
+        III
+      </td>
+      <td>
+        three
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <BLANKLINE>
+
+To specify the widths of the columns, simply fill out a sequence:
+
+  >>> formatter.columnWidths = [100, 50, 75]
+  >>> print formatter()
+  <BLANKLINE>
+  <table>
+    <thead>
+      <tr>
+        <th width="100">
+          Numeric
+        </th>
+        <th width="50">
+          Roman
+        </th>
+        <th width="75">
+          Word
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>
+        1
+      </td>
+      <td>
+        I
+      </td>
+      <td>
+        one
+      </td>
+    </tr>
+    <tr>
+      <td>
+        2
+      </td>
+      <td>
+        II
+      </td>
+      <td>
+        two
+      </td>
+    </tr>
+    <tr>
+      <td>
+        3
+      </td>
+      <td>
+        III
+      </td>
+      <td>
+        three
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <BLANKLINE>
+
+Possible Improvement: The attribute could be a mapping from column name to
+width, so that it also works when the length of selected columns does not
+equal the length of total columns (which was not a use case of mine).

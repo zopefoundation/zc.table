@@ -40,6 +40,9 @@ def columnSetUp(test):
 def test_suite():
     from zope.testing import doctest
     return unittest.TestSuite((
+        doctest.DocFileSuite('extable.txt',
+            optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
+            ),
         doctest.DocFileSuite('README.txt',
             optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
             ),
