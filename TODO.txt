@@ -1,0 +1,6 @@
+To-do
+-----
+
+- Get an updated version of the buildout/testrunner recipes to
+  generate a usable test runner (bin/test).  Currently needs to be
+  manually hacked to add the path for parts/zope3/src.
