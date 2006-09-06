@@ -21,4 +21,5 @@ setup(
     description=open("README.txt").read(),
     license='ZPL',
     keywords="zope zope3",
+    zip_safe=False,
     )
