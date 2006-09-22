@@ -1,0 +1,8 @@
+================
+zc.table changes
+================
+
+0.6 (2006-09-22)
+================
+
+Initial release on Cheeseshop.
