@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name="zc.table",
     version="0.6",
-    install_requires=['zc.resourcelibrary >= 0.6'],
+    install_requires=['setuptools', 'zc.resourcelibrary >= 0.6'],
     packages=find_packages('src'),
     package_dir= {'':'src'},
 
@@ -20,5 +20,4 @@ setup(
     keywords="zope zope3",
     zip_safe=False,
     classifiers = ['Framework :: Zope3'],
-    install_requires=['setuptools'],
     )
