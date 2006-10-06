@@ -14,7 +14,7 @@
 import re
 from xml.sax.saxutils import quoteattr
 
-from zope import interface, component, i18n
+from zope import component
 import zope.schema.interfaces
 import zope.formlib.interfaces
 import zope.formlib.form

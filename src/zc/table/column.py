@@ -19,7 +19,6 @@ import warnings
 from xml.sax.saxutils import quoteattr
 
 from zope import interface, component, schema, i18n
-from zope.app.form.browser.submit import Update
 from zope.app.form.interfaces import IInputWidget
 from zope.app.form.interfaces import WidgetInputError, WidgetsError
 
