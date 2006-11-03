@@ -32,7 +32,8 @@
       style="margin-right: 1ex"
       tal:attributes="batch_change_name view/batch_change_name"
       tal:condition="python: view.previous_batch_start is not None"
-      onclick="javascript:zc_table_batching_do_it(this, 'back');"
+      href=""
+      onclick="javascript:zc_table_batching_do_it(this, 'back'); return false"
       class="zc-table-batching-pager-prev"
       >&lt; <span i18n:translate="">Prev</span></a>
   <span
@@ -43,7 +44,8 @@
   <a
       tal:attributes="batch_change_name view/batch_change_name"
       tal:condition="python: view.next_batch_start is not None"
-      onclick="javascript:zc_table_batching_do_it(this, 'next')"
+      onclick="javascript:zc_table_batching_do_it(this, 'next'); return false"
+      href=""
       class="zc-table-batching-pager-next"
       ><span i18n:translate="">Next</span> &gt;</a>
   <span
