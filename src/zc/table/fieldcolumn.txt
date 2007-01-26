@@ -55,19 +55,24 @@ with names and email addresses:
     ...     email = schema.TextLine(
     ...             title=u'Email Address',
     ...             constraint=re.compile('\w+@\w+([.]\w+)+$').match)
+    ...     salutation = schema.Choice( 
+    ...		       title=u'Salutation',
+    ...		       values = ['Mr','Ms'],
+    ...		       )
 
     >>> class Contact:
     ...     interface.implements(IContact)
-    ...     def __init__(self, id, name, email):
+    ...     def __init__(self, id, name, email, salutation):
     ...         self.id = id
     ...         self.name = name
     ...         self.email = email
+    ...         self.salutation = salutation
 
     >>> contacts = (
-    ...     Contact('1', 'Bob Smith', 'bob@zope.com'),
-    ...     Contact('2', 'Sally Baker', 'sally@zope.com'),
-    ...     Contact('3', 'Jethro Tul', 'jethro@zope.com'),
-    ...     Contact('4', 'Joe Walsh', 'joe@zope.com'),
+    ...     Contact('1', 'Bob Smith', 'bob@zope.com', 'Mr'),
+    ...     Contact('2', 'Sally Baker', 'sally@zope.com', 'Ms'),
+    ...     Contact('3', 'Jethro Tul', 'jethro@zope.com', 'Mr'),
+    ...     Contact('4', 'Joe Walsh', 'joe@zope.com', 'Mr'),
     ...     )
 
 We'll define columns that allow us to display and edit name and
@@ -77,8 +82,15 @@ email addresses.
     >>> class ContactColumn(fieldcolumn.FieldColumn):
     ...     def getId(self, item, formatter):
     ...         return fieldcolumn.toSafe(item.id)
+    ...
+    >>> class BindingContactColumn(ContactColumn):
+    ...     def getFieldContext(self, item, formatter):
+    ...         return item
+    ...
     >>> columns = (ContactColumn(IContact["name"]),
-    ...            ContactColumn(IContact["email"]))
+    ...            ContactColumn(IContact["email"]),
+    ...	           BindingContactColumn(IContact["salutation"])
+    ...            )
 
 Now, with this, we can create a table with input widgets.  The columns don't 
 need a context other than the items themselves, so we ignore that part of the
@@ -100,6 +112,9 @@ table formatter instantiation:
         <th>
           Email Address
         </th>
+        <th>
+          Salutation
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -112,6 +127,19 @@ table formatter instantiation:
           <input class="textType" id="test.1.email" name="test.1.email"
                  size="20" type="text" value="bob@zope.com"  />
         </td>
+        <td>
+          <div>
+            <div class="value">
+              <select id="test.1.salutation" name="test.1.salutation"
+                      size="1" >
+                <option selected="selected" value="Mr">Mr</option>
+                <option value="Ms">Ms</option>
+              </select>
+            </div>
+            <input name="test.1.salutation-empty-marker" type="hidden"
+                   value="1" />
+          </div>
+        </td>
       </tr>
       <tr>
         <td>
@@ -121,6 +149,19 @@ table formatter instantiation:
         <td>
           <input class="textType" id="test.2.email" name="test.2.email"
                  size="20" type="text" value="sally@zope.com"  />
+        </td>
+        <td>
+          <div>
+            <div class="value">
+              <select id="test.2.salutation" name="test.2.salutation"
+                      size="1" >
+                <option value="Mr">Mr</option>
+                <option selected="selected" value="Ms">Ms</option>
+              </select>
+            </div>
+            <input name="test.2.salutation-empty-marker" type="hidden"
+                   value="1" />
+          </div>
         </td>
       </tr>
       <tr>
@@ -132,6 +173,19 @@ table formatter instantiation:
           <input class="textType" id="test.3.email" name="test.3.email"
                  size="20" type="text" value="jethro@zope.com"  />
         </td>
+        <td>
+          <div>
+            <div class="value">
+              <select id="test.3.salutation" name="test.3.salutation"
+                      size="1" >
+                <option selected="selected" value="Mr">Mr</option>
+                <option value="Ms">Ms</option>
+              </select>
+            </div>
+            <input name="test.3.salutation-empty-marker" type="hidden"
+                   value="1" />
+          </div>
+        </td>
       </tr>
       <tr>
         <td>
@@ -141,6 +195,19 @@ table formatter instantiation:
         <td>
           <input class="textType" id="test.4.email" name="test.4.email"
                  size="20" type="text" value="joe@zope.com"  />
+        </td>
+        <td>
+          <div>
+            <div class="value">
+              <select id="test.4.salutation" name="test.4.salutation"
+                      size="1" >
+                <option selected="selected" value="Mr">Mr</option>
+                <option value="Ms">Ms</option>
+              </select>
+            </div>
+            <input name="test.4.salutation-empty-marker" type="hidden"
+                   value="1" />
+          </div>
         </td>
       </tr>
     </tbody>
@@ -162,6 +229,9 @@ If the request has input for a value, then this will override item data:
         <th>
           Email Address
         </th>
+        <th>
+          Salutation
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -174,6 +244,19 @@ If the request has input for a value, then this will override item data:
           <input class="textType" id="test.1.email" name="test.1.email"
                  size="20" type="text" value="bob@zope.com"  />
         </td>
+        <td>
+          <div>
+            <div class="value">
+              <select id="test.1.salutation" name="test.1.salutation"
+                      size="1" >
+                <option selected="selected" value="Mr">Mr</option>
+                <option value="Ms">Ms</option>
+              </select>
+            </div>
+            <input name="test.1.salutation-empty-marker" type="hidden"
+                   value="1" />
+          </div>
+        </td>
       </tr>
       <tr>
         <td>
@@ -183,6 +266,19 @@ If the request has input for a value, then this will override item data:
         <td>
           <input class="textType" id="test.2.email" name="test.2.email"
                  size="20" type="text" value="sally@zope.com"  />
+        </td>
+        <td>
+          <div>
+            <div class="value">
+              <select id="test.2.salutation" name="test.2.salutation"
+                      size="1" >
+                <option value="Mr">Mr</option>
+                <option selected="selected" value="Ms">Ms</option>
+              </select>
+            </div>
+            <input name="test.2.salutation-empty-marker" type="hidden"
+                   value="1" />
+          </div>
         </td>
       </tr>
       <tr>
@@ -194,6 +290,19 @@ If the request has input for a value, then this will override item data:
           <input class="textType" id="test.3.email" name="test.3.email"
                  size="20" type="text" value="jethro@zope.com"  />
         </td>
+        <td>
+          <div>
+            <div class="value">
+              <select id="test.3.salutation" name="test.3.salutation"
+                      size="1" >
+                <option selected="selected" value="Mr">Mr</option>
+                <option value="Ms">Ms</option>
+              </select>
+            </div>
+            <input name="test.3.salutation-empty-marker" type="hidden"
+                   value="1" />
+          </div>
+        </td>
       </tr>
       <tr>
         <td>
@@ -203,6 +312,19 @@ If the request has input for a value, then this will override item data:
         <td>
           <input class="textType" id="test.4.email" name="test.4.email"
                  size="20" type="text" value="walsh@zope.com"  />
+        </td>
+        <td>
+          <div>
+            <div class="value">
+              <select id="test.4.salutation" name="test.4.salutation"
+                      size="1" >
+                <option selected="selected" value="Mr">Mr</option>
+                <option value="Ms">Ms</option>
+              </select>
+            </div>
+            <input name="test.4.salutation-empty-marker" type="hidden"
+                   value="1" />
+          </div>
         </td>
       </tr>
     </tbody>

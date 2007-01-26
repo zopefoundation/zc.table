@@ -68,8 +68,6 @@ class BaseColumn(column.Column):
 
 class FieldColumn(BaseColumn):
     """Column that supports field/widget update
-
-    Note that fields are only bound if bind == True.
     """
 
     __slots__ = ('title', 'name', 'field') # to emphasize that this should not

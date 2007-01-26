@@ -37,6 +37,32 @@ def columnSetUp(test):
          ),
         zope.app.form.interfaces.IInputWidget)
 
+def fieldColumnSetUp(test):
+    columnSetUp(test)
+    component.provideAdapter(
+        zope.app.form.browser.ChoiceDisplayWidget,
+        (zope.schema.interfaces.IChoice,
+         zope.publisher.interfaces.browser.IBrowserRequest),
+        zope.app.form.interfaces.IDisplayWidget)
+    component.provideAdapter(
+        zope.app.form.browser.ChoiceInputWidget,
+        (zope.schema.interfaces.IChoice,
+         zope.publisher.interfaces.browser.IBrowserRequest),
+        zope.app.form.interfaces.IInputWidget)
+    component.provideAdapter(
+        zope.app.form.browser.DropdownWidget,
+        (zope.schema.interfaces.IChoice,
+         zope.schema.interfaces.IVocabularyTokenized,
+         zope.publisher.interfaces.browser.IBrowserRequest),
+        zope.app.form.interfaces.IInputWidget)
+    component.provideAdapter(
+        zope.app.form.browser.ChoiceDisplayWidget,
+        (zope.schema.interfaces.IChoice,
+         zope.schema.interfaces.IVocabularyTokenized,
+         zope.publisher.interfaces.browser.IBrowserRequest),
+        zope.app.form.interfaces.IDisplayWidget)
+    
+
 def test_suite():
     from zope.testing import doctest
     return unittest.TestSuite((
@@ -50,7 +76,7 @@ def test_suite():
             ),
         doctest.DocFileSuite(
             'fieldcolumn.txt',
-            setUp = columnSetUp, tearDown=placelesssetup.tearDown,
+            setUp = fieldColumnSetUp, tearDown=placelesssetup.tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
             ),
         ))
