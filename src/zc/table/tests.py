@@ -22,6 +22,7 @@ import zope.publisher.interfaces.browser
 import zope.schema.interfaces
 import zope.app.form.browser
 
+
 def columnSetUp(test):
     placelesssetup.setUp(test)
     component.provideAdapter(
@@ -36,6 +37,7 @@ def columnSetUp(test):
          zope.publisher.interfaces.browser.IBrowserRequest,
          ),
         zope.app.form.interfaces.IInputWidget)
+
 
 def fieldColumnSetUp(test):
     columnSetUp(test)
@@ -61,7 +63,7 @@ def fieldColumnSetUp(test):
          zope.schema.interfaces.IVocabularyTokenized,
          zope.publisher.interfaces.browser.IBrowserRequest),
         zope.app.form.interfaces.IDisplayWidget)
-    
+
 
 def test_suite():
     from zope.testing import doctest
@@ -83,4 +85,3 @@ def test_suite():
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')
-
