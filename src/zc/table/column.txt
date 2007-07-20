@@ -403,3 +403,116 @@ would do this, for example, to use a blank title:
       </tr>
     </tbody>
     </table>
+
+<>& encoding bug
+================
+
+There was a bug in column.py, it did not encode the characters <>& to
+&lt; &gt; &amp;
+
+    >>> bugcontacts = (
+    ...     Contact('1', 'Bob <Smith>', 'bob@zope.com'),
+    ...     Contact('2', 'Sally & Baker', 'sally@zope.com'),
+    ...     )
+
+We'll define columns that displays name and email addresses.
+
+    >>> from zc.table import column
+    >>> bugcolumns = (
+    ...     column.GetterColumn(
+    ...         title="Name", name="name",
+    ...         getter=lambda contact, formatter: contact.name,
+    ...         ),
+    ...     column.GetterColumn(
+    ...         title="E-mail", name="email",
+    ...         getter=lambda contact, formatter: contact.email,
+    ...         ),
+    ...     )
+
+    >>> request = zope.publisher.browser.TestRequest()
+    >>> context = None
+    >>> formatter = table.Formatter(
+    ...     context, request, bugcontacts, columns=bugcolumns)
+    >>> print formatter()
+    <table>
+      <thead>
+        <tr>
+          <th>
+            Name
+          </th>
+          <th>
+            E-mail
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          Bob &lt;Smith&gt;
+        </td>
+        <td>
+          bob@zope.com
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Sally &amp; Baker
+        </td>
+        <td>
+          sally@zope.com
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    >>> from zc.table import column
+    >>> bug2columns = (
+    ...     column.FieldEditColumn(
+    ...         "Name", "test", IContact["name"],
+    ...         lambda contact: contact.id,
+    ...         ),
+    ...     column.FieldEditColumn(
+    ...         "Email address", "test", IContact["email"],
+    ...         lambda contact: contact.id,
+    ...         ),
+    ...     )
+
+    >>> formatter = table.Formatter(
+    ...     context, request, bugcontacts, columns=bug2columns)
+    >>> print formatter()
+    <BLANKLINE>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            Name
+          </th>
+          <th>
+            Email address
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          <input class="textType" id="test.MQ==.name" name="test.MQ==.name"
+                 size="20" type="text" value="Bob &lt;Smith&gt;"  />
+        </td>
+        <td>
+          <input class="textType" id="test.MQ==.email" name="test.MQ==.email"
+                 size="20" type="text" value="bob@zope.com"  />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input class="textType" id="test.Mg==.name" name="test.Mg==.name"
+                 size="20" type="text" value="Sally &amp; Baker"  />
+        </td>
+        <td>
+          <input class="textType" id="test.Mg==.email" name="test.Mg==.email"
+                 size="20" type="text" value="sally@zope.com"  />
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <BLANKLINE>
