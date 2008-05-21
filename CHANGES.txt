@@ -2,7 +2,17 @@
 zc.table changes
 ================
 
+0.7 (2008-05-20)
+----------------
+
+- Fixed HTML-encoding of cell contents for ``GetterColumn``.
+
+- Add ``href`` attributes (for MSIE) and fix up JavaScript on Next/Prev links
+  for batching.
+
+- Update packaging.
+
 0.6 (2006-09-22)
-================
+----------------
 
 Initial release on Cheeseshop.
