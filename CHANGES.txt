@@ -2,8 +2,8 @@
 zc.table changes
 ================
 
-0.7 (2008-05-20)
-----------------
+0.7.0 (2008-05-20)
+------------------
 
 - Fixed HTML-encoding of cell contents for ``GetterColumn``.
 
