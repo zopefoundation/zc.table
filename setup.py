@@ -3,6 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name="zc.table",
     version="0.7.1dev",
+    url="http://pypi.python.org/pypi/zc.table/",
     install_requires=[
         'setuptools',
         'zc.resourcelibrary >= 0.6',
