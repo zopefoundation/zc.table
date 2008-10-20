@@ -59,10 +59,12 @@ class SortingColumn(Column):
         else:
             items = list(items) # don't mutate original
         getSortKey = self.getSortKey
-        items.sort(
-            lambda a, b: multiplier*cmp(getSortKey(a, formatter), 
-                                        getSortKey(b, formatter)))
-        return items
+
+        # let's do decorate, sort, undecorate trick here to conserve time
+        tmp_items = [(getSortKey(item, formatter), item) for item in items]
+        tmp_items.sort(lambda a, b: multiplier*cmp(a[0], b[0]))
+
+        return [item for key, item in tmp_items]
 
     def sort(self, items, formatter, start, stop, sorters):
         return self._sort(items, formatter, start, stop, sorters, 1)
