@@ -226,8 +226,9 @@ WidgetsError will be raised:
     >>> request.form["test.NA==.email"] = u'walsh'
     >>> data = columns[1].input(contacts, request)
     Traceback (most recent call last):
-      ...
-    WidgetsError: WidgetInputError: ('email', u'', walsh)
+    ...
+    WidgetsError: WidgetInputError:
+        ('email', u'', ConstraintNotSatisfied(u'walsh'))
 
 Custom getters and setters
 --------------------------

@@ -365,7 +365,8 @@ WidgetsError will be raised:
     >>> data = columns[1].input(contacts, formatter)
     Traceback (most recent call last):
       ...
-    WidgetsError: WidgetInputError: ('email', u'Email Address', walsh)
+    WidgetsError: WidgetInputError:
+        ('email', u'Email Address', ConstraintNotSatisfied(u'walsh'))
 
 Custom getters and setters
 --------------------------

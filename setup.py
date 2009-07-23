@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="zc.table",
-    version="0.7.1dev",
+    version="0.8.0",
     url="http://pypi.python.org/pypi/zc.table/",
     install_requires=[
         'setuptools',
@@ -11,6 +11,7 @@ setup(
         'zope.app.testing',
         'zope.cachedescriptors',
         'zope.component',
+        'zope.formlib',
         'zope.i18n',
         'zope.interface',
         'zope.schema',
