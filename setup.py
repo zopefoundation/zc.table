@@ -28,7 +28,7 @@ setup(
 
     author='Zope Project',
     author_email='zope-dev at zope.org',
-    description=open("README.txt").read(),
+    description=open("README.txt").read() + '\n\n' + open('CHANGES.txt').read(),
     license='ZPL',
     keywords="zope zope3",
     zip_safe=False,

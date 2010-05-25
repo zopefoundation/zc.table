@@ -6,6 +6,7 @@ zc.table changes
 ------------------
 
 - replaced html entities with unicode entities since they are xthml valid.
+  [fRiSi]
 
 0.8.0 (2009-07-23)
 ------------------
