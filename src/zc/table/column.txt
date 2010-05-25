@@ -449,7 +449,7 @@ We'll define columns that displays name and email addresses.
       <tbody>
       <tr>
         <td>
-          Bob &lt;Smith&gt;
+          Bob &#60;Smith&#62;
         </td>
         <td>
           bob@zope.com
@@ -457,7 +457,7 @@ We'll define columns that displays name and email addresses.
       </tr>
       <tr>
         <td>
-          Sally &amp; Baker
+          Sally &#38; Baker
         </td>
         <td>
           sally@zope.com

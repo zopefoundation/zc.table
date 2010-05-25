@@ -103,9 +103,9 @@ class GetterColumn(SortingColumn):
         return item
 
     def cell_formatter(self, value, item, formatter):
-        return unicode(value).replace('&', '&amp;') \
-                              .replace('<', '&lt;') \
-                              .replace('>', '&gt;')
+        return unicode(value).replace('&', '&#38;') \
+                              .replace('<', '&#60;') \
+                              .replace('>', '&#62;')
 
     def renderCell(self, item, formatter):
         value = self.getter(item, formatter)
