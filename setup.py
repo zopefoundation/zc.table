@@ -27,7 +27,7 @@ setup(
     },
 
     author='Zope Project',
-    author_email='zope3-dev@zope.org',
+    author_email='zope-dev at zope.org',
     description=open("README.txt").read(),
     license='ZPL',
     keywords="zope zope3",
