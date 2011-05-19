@@ -66,7 +66,7 @@ def fieldColumnSetUp(test):
 
 
 def test_suite():
-    from zope.testing import doctest
+    import doctest
     return unittest.TestSuite((
         doctest.DocFileSuite('README.txt',
             optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
@@ -82,6 +82,3 @@ def test_suite():
             optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
             ),
         ))
-
-if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')

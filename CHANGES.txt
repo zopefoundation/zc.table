@@ -1,6 +1,15 @@
 CHANGES
 =======
 
+0.8.2 (unreleased)
+------------------
+
+- Using Python's ``doctest`` module instead of deprecated
+  ``zope.testing.doctest``.
+
+- Removed deprecated slugs for ZPKG and ZCML.
+
+
 0.8.1 (2010-05-25)
 ------------------
 
