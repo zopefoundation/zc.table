@@ -17,14 +17,14 @@ $Id: tests.py 4428 2005-12-13 23:35:48Z gary $
 """
 import unittest
 from zope import component
-from zope.app.testing import placelesssetup
+from zope.component.testing import setUp, tearDown
 import zope.publisher.interfaces.browser
 import zope.schema.interfaces
 import zope.app.form.browser
 
 
 def columnSetUp(test):
-    placelesssetup.setUp(test)
+    setUp(test)
     component.provideAdapter(
         zope.app.form.browser.TextWidget,
         (zope.schema.interfaces.ITextLine,
@@ -73,12 +73,12 @@ def test_suite():
             ),
         doctest.DocFileSuite(
             'column.txt',
-            setUp = columnSetUp, tearDown=placelesssetup.tearDown,
+            setUp=columnSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
             ),
         doctest.DocFileSuite(
             'fieldcolumn.txt',
-            setUp = fieldColumnSetUp, tearDown=placelesssetup.tearDown,
+            setUp=fieldColumnSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
             ),
         ))

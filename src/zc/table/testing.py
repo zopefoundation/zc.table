@@ -16,7 +16,6 @@
 $Id: testing.py 2520 2005-06-27 21:26:18Z benji $
 """
 from zope import interface, component
-from zope.app.testing import ztapi
 import zc.table.interfaces
 import zc.table.table
 
@@ -26,10 +25,11 @@ class SimpleFormatter(zc.table.table.Formatter):
 
 
 def setUp(test):
-    ztapi.provideUtility(zc.table.interfaces.IFormatterFactory, 
-                         SimpleFormatter)
+    gsm = component.getGlobalSiteManager()
+    gsm.registerUtility(SimpleFormatter, zc.table.interfaces.IFormatterFactory)
     assert component.getUtility(zc.table.interfaces.IFormatterFactory) != None
-    
+
 
 def tearDown(test):
-    ztapi.unprovideUtility(zc.table.interfaces.IFormatterFactory)
+    gsm = component.getGlobalSiteManager()
+    gsm.unregisterUtility(provided=zc.table.interfaces.IFormatterFactory)

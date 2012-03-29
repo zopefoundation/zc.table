@@ -9,6 +9,10 @@ CHANGES
 
 - Removed deprecated slugs for ZPKG and ZCML.
 
+- Removed dependency on ``zope.app.testing``.
+
+- Move ``zope.testing`` to test extra.
+
 
 0.8.1 (2010-05-25)
 ------------------
