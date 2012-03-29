@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-0.8.2 (unreleased)
+0.9.0 (unreleased)
 ------------------
 
 - Using Python's ``doctest`` module instead of deprecated
@@ -9,7 +9,7 @@ CHANGES
 
 - Removed deprecated slugs for ZPKG and ZCML.
 
-- Removed dependency on ``zope.app.testing``.
+- Removed dependency on ``zope.app.testing`` and ``zope.app.form``.
 
 - Move ``zope.testing`` to test extra.
 

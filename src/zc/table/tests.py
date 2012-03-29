@@ -20,49 +20,49 @@ from zope import component
 from zope.component.testing import setUp, tearDown
 import zope.publisher.interfaces.browser
 import zope.schema.interfaces
-import zope.app.form.browser
+import zope.formlib.widgets
 
 
 def columnSetUp(test):
     setUp(test)
     component.provideAdapter(
-        zope.app.form.browser.TextWidget,
+        zope.formlib.widgets.TextWidget,
         (zope.schema.interfaces.ITextLine,
          zope.publisher.interfaces.browser.IBrowserRequest,
          ),
-        zope.app.form.interfaces.IInputWidget)
+        zope.formlib.interfaces.IInputWidget)
     component.provideAdapter(
-        zope.app.form.browser.CheckBoxWidget,
+        zope.formlib.widgets.CheckBoxWidget,
         (zope.schema.interfaces.IBool,
          zope.publisher.interfaces.browser.IBrowserRequest,
          ),
-        zope.app.form.interfaces.IInputWidget)
+        zope.formlib.interfaces.IInputWidget)
 
 
 def fieldColumnSetUp(test):
     columnSetUp(test)
     component.provideAdapter(
-        zope.app.form.browser.ChoiceDisplayWidget,
+        zope.formlib.widgets.ChoiceDisplayWidget,
         (zope.schema.interfaces.IChoice,
          zope.publisher.interfaces.browser.IBrowserRequest),
-        zope.app.form.interfaces.IDisplayWidget)
+        zope.formlib.interfaces.IDisplayWidget)
     component.provideAdapter(
-        zope.app.form.browser.ChoiceInputWidget,
+        zope.formlib.widgets.ChoiceInputWidget,
         (zope.schema.interfaces.IChoice,
          zope.publisher.interfaces.browser.IBrowserRequest),
-        zope.app.form.interfaces.IInputWidget)
+        zope.formlib.interfaces.IInputWidget)
     component.provideAdapter(
-        zope.app.form.browser.DropdownWidget,
+        zope.formlib.widgets.DropdownWidget,
         (zope.schema.interfaces.IChoice,
          zope.schema.interfaces.IVocabularyTokenized,
          zope.publisher.interfaces.browser.IBrowserRequest),
-        zope.app.form.interfaces.IInputWidget)
+        zope.formlib.interfaces.IInputWidget)
     component.provideAdapter(
-        zope.app.form.browser.ChoiceDisplayWidget,
+        zope.formlib.widgets.ChoiceDisplayWidget,
         (zope.schema.interfaces.IChoice,
          zope.schema.interfaces.IVocabularyTokenized,
          zope.publisher.interfaces.browser.IBrowserRequest),
-        zope.app.form.interfaces.IDisplayWidget)
+        zope.formlib.interfaces.IDisplayWidget)
 
 
 def test_suite():

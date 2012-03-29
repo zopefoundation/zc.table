@@ -19,8 +19,8 @@ import warnings
 from xml.sax.saxutils import quoteattr
 
 from zope import interface, component, schema, i18n
-from zope.app.form.interfaces import IInputWidget
-from zope.app.form.interfaces import WidgetInputError, WidgetsError
+from zope.formlib.interfaces import IInputWidget
+from zope.formlib.interfaces import WidgetInputError, WidgetsError
 
 from zc.table import interfaces
 

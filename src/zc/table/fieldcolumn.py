@@ -19,8 +19,8 @@ import zope.schema.interfaces
 import zope.formlib.interfaces
 import zope.formlib.form
 
-from zope.app.form.interfaces import IInputWidget, IDisplayWidget
-from zope.app.form.interfaces import WidgetInputError, WidgetsError
+from zope.formlib.interfaces import IInputWidget, IDisplayWidget
+from zope.formlib.interfaces import WidgetInputError, WidgetsError
 
 from zc.table import column
 

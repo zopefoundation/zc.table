@@ -14,7 +14,7 @@
 """Table formatting and configuration
 """
 from zope import interface
-from zope.app import pagetemplate
+from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 
 import zc.table.table
 import zc.table.interfaces
@@ -107,7 +107,7 @@ class Formatter(zc.table.table.FormSortFormatterMixin,
             self.previous_batch_start = None
         self._batch_start_computed = True
 
-    batching_template = pagetemplate.ViewPageTemplateFile('batching.pt')
+    batching_template = ViewPageTemplateFile('batching.pt')
     def renderExtra(self):
         if not self._batch_start_computed:
             self.updateBatching()
