@@ -7,18 +7,16 @@ CHANGES
 - Using Python's ``doctest`` module instead of deprecated
   ``zope.testing.doctest``.
 
-- Removed deprecated slugs for ZPKG and ZCML.
-
 - Removed dependency on ``zope.app.testing`` and ``zope.app.form``.
 
-- Move ``zope.testing`` to test extra.
+- Add test extra, move ``zope.testing`` to it.
 
 
 0.8.1 (2010-05-25)
 ------------------
 
-- replaced html entities with unicode entities since they are xthml valid.
-  [fRiSi]
+- Replaced html entities with unicode entities since they are xthml valid.
+
 
 0.8.0 (2009-07-23)
 ------------------

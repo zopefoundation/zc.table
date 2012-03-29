@@ -1,3 +1,6 @@
+FieldColumn
+===========
+
 The FieldColumn is intended to be a replacement for the FieldEditColumn.  It
 has the following goals.
 
@@ -56,9 +59,9 @@ with names and email addresses:
     ...             title=u'Email Address',
     ...             constraint=re.compile('\w+@\w+([.]\w+)+$').match)
     ...     salutation = schema.Choice(
-    ...		       title=u'Salutation',
-    ...		       values = ['Mr','Ms'],
-    ...		       )
+    ...             title=u'Salutation',
+    ...             values = ['Mr','Ms'],
+    ...             )
 
     >>> class Contact:
     ...     interface.implements(IContact)
@@ -89,7 +92,7 @@ email addresses.
     ...
     >>> columns = (ContactColumn(IContact["name"]),
     ...            ContactColumn(IContact["email"]),
-    ...	           BindingContactColumn(IContact["salutation"])
+    ...            BindingContactColumn(IContact["salutation"])
     ...            )
 
 Now, with this, we can create a table with input widgets.  The columns don't

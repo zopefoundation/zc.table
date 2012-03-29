@@ -1,4 +1,23 @@
+##############################################################################
+#
+# Copyright (c) 2006 Zope Foundation and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
+"""Setup for zc.table package
+"""
+import os
 from setuptools import setup, find_packages
+
+def read(*rnames):
+    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
 setup(
     name="zc.table",
@@ -28,12 +47,25 @@ setup(
     'zc.table':['resources/*', '*.pt'],
     },
 
-    author='Zope Project',
-    author_email='zope-dev at zope.org',
-    description="This is a Zope 3 extension that helps with the construction of (HTML) tables. Features include dynamic HTML table generation, batching and sorting.",
-    long_description=open("README.txt").read() + '\n\n' + open('CHANGES.txt').read(),
-    license='ZPL',
+    author='Zope Foundation and Contributors',
+    author_email='zope-dev@zope.org',
+    description="Zope table",
+    long_description=(
+        read('README.txt')
+        + '\n\n' +
+        read('CHANGES.txt')
+        ),
+    license='ZPL 2.1',
     keywords="zope zope3",
+    classifiers = [
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Web Environment',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Zope Public License',
+        'Programming Language :: Python',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Topic :: Internet :: WWW/HTTP',
+        'Framework :: Zope3'],
     zip_safe=False,
-    classifiers = ['Framework :: Zope3'],
     )

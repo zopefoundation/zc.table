@@ -137,7 +137,7 @@ is the number of items the table should render; 0 means all.
 
 The next optional argument, `prefix=None`, is particularly important when a
 table formatter is used within a form: it sets a prefix for any form fields
-and XML identifiers generated for the table or a contained element::
+and XML identifiers generated for the table or a contained element.
 
 The last optional argument is the full set of columns for the table (not just
 the ones curently visible).  It is optional because it may be set instead as
@@ -613,6 +613,7 @@ column. Then we'll configure the sort to sort with "First" being the primary
 key and "Third" being the secondary key (you can provide more than two if you
 wish). Note that, unlike some of the values examined up to this point, the
 sort columns will only be honored when passed to the class on instanciation.
+
     >>> big_items = items[:]
     >>> big_items.append(DataItem('a1', 'b1', 'c9'))
     >>> big_items.append(DataItem('a1', 'b1', 'c7'))
