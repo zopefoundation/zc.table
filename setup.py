@@ -21,7 +21,7 @@ def read(*rnames):
 
 setup(
     name="zc.table",
-    version='0.9.0',
+    version='0.9.1dev',
     url="http://pypi.python.org/pypi/zc.table/",
     install_requires=[
         'setuptools',
