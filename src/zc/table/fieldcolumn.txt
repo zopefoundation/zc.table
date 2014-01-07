@@ -369,7 +369,7 @@ WidgetsError will be raised:
     Traceback (most recent call last):
       ...
     WidgetsError: WidgetInputError:
-        ('email', u'Email Address', ConstraintNotSatisfied(u'walsh'))
+        ('email', u'Email Address', ConstraintNotSatisfied(u'walsh', 'email'))
 
 Custom getters and setters
 --------------------------
