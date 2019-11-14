@@ -24,6 +24,7 @@ from zope.formlib.interfaces import WidgetInputError, WidgetsError
 
 from zc.table import interfaces
 
+
 class Column(object):
     interface.implements(interfaces.IColumn)
     title = None
@@ -43,6 +44,7 @@ class Column(object):
         raise NotImplementedError('Subclasses must provide their '
                                   'own renderCell method.')
 
+
 class SortingColumn(Column):
     interface.implements(interfaces.ISortableColumn)
 
@@ -57,7 +59,7 @@ class SortingColumn(Column):
         if self.subsort and sorters:
             items = sorters[0](items, formatter, start, stop, sorters[1:])
         else:
-            items = list(items) # don't mutate original
+            items = list(items)  # don't mutate original
         getSortKey = self.getSortKey
 
         items.sort(
@@ -78,6 +80,7 @@ class SortingColumn(Column):
     def getSortKey(self, item, formatter):
         raise NotImplementedError
 
+
 class GetterColumn(SortingColumn):
     """Column for simple use cases.
 
@@ -89,7 +92,7 @@ class GetterColumn(SortingColumn):
     """
     interface.implementsOnly(interfaces.IColumn)
 
-    def __init__(self, title=None, getter=None, cell_formatter=None, 
+    def __init__(self, title=None, getter=None, cell_formatter=None,
                  name=None, subsort=False):
         if getter is not None:
             self.getter = getter
@@ -123,6 +126,7 @@ class MailtoColumn(GetterColumn):
         email = super(MailtoColumn, self).renderCell(item, formatter)
         return '<a href="mailto:%s">%s</a>' % (email, email)
 
+
 class FieldEditColumn(Column):
     """Columns that supports field/widget update
 
@@ -130,12 +134,12 @@ class FieldEditColumn(Column):
     """
 
     def __init__(self, title=None, prefix=None, field=None,
-                 idgetter=None, getter=None, setter=None, name='', bind=False, 
+                 idgetter=None, getter=None, setter=None, name='', bind=False,
                  widget_class=None, widget_extra=None):
         super(FieldEditColumn, self).__init__(title, name)
-        assert prefix is not None # this is required
-        assert field is not None # this is required
-        assert idgetter is not None # this is required
+        assert prefix is not None  # this is required
+        assert field is not None  # this is required
+        assert idgetter is not None  # this is required
         self.prefix = prefix
         self.field = field
         self.idgetter = idgetter
@@ -226,9 +230,9 @@ class SelectionColumn(FieldEditColumn):
             else:
                 prefix = 'selection_column'
         if getter is None:
-            getter = lambda item: False
+            getter = lambda item: False  # noqa
         if setter is None:
-            setter = lambda item, value: None
+            setter = lambda item, value: None  # noqa
         if title is None:
             title = field.title or ""
         self.hide_header = hide_header
@@ -247,20 +251,22 @@ class SelectionColumn(FieldEditColumn):
         data = self.input(items, request)
         return [item for item in items if data.get(self.makeId(item))]
 
+
 class SubmitColumn(Column):
+
     def __init__(self, title=None, prefix=None, idgetter=None, action=None,
                  labelgetter=None, condition=None,
                  extra=None, cssClass=None, renderer=None, name=''):
         super(SubmitColumn, self).__init__(title, name)
         # hacked together. :-/
-        assert prefix is not None # this is required
-        assert idgetter is not None # this is required
-        assert labelgetter is not None # this is required
-        assert action is not None # this is required
+        assert prefix is not None  # this is required
+        assert idgetter is not None  # this is required
+        assert labelgetter is not None  # this is required
+        assert action is not None  # this is required
         self.prefix = prefix
         self.idgetter = idgetter
         self.action = action
-        self.renderer=renderer
+        self.renderer = renderer
         self.condition = condition
         self.extra = extra
         self.cssClass = cssClass

@@ -68,9 +68,10 @@ def fieldColumnSetUp(test):
 def test_suite():
     import doctest
     return unittest.TestSuite((
-        doctest.DocFileSuite('README.txt',
+        doctest.DocFileSuite(
+            'README.txt',
             optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
-            ),
+        ),
         doctest.DocFileSuite(
             'column.txt',
             setUp=columnSetUp, tearDown=tearDown,

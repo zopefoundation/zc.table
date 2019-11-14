@@ -19,22 +19,22 @@ import re
 
 from zope import interface, schema
 
-pythonLikeNameConstraint = re.compile('^[a-zA-Z_]\w*$').match
+pythonLikeNameConstraint = re.compile(r'^[a-zA-Z_]\w*$').match
+
 
 class IColumn(interface.Interface):
 
     name = schema.BytesLine(
-        title = u'Name',
-        description = (u'Name used for column in options of a table '
-                       u'configuration.  Must be unique within any set of '
-                       u'columns passed to a table formatter.'),
-        constraint = pythonLikeNameConstraint,
+        title=u'Name',
+        description=(u'Name used for column in options of a table '
+                     u'configuration.  Must be unique within any set of '
+                     u'columns passed to a table formatter.'),
+        constraint=pythonLikeNameConstraint,
         )
 
     title = schema.TextLine(
-        title = u'Title',
-        description = u'The title of the column, used in configuration '
-                      u'dialogs.',
+        title=u'Title',
+        description=u'The title of the column, used in configuration dialogs.',
         )
 
     def renderHeader(formatter):
@@ -53,6 +53,7 @@ class IColumn(interface.Interface):
 
         Returns html_fragment, not including any surrounding <td> tags.
         """
+
 
 class ISortableColumn(interface.Interface):
 
@@ -79,6 +80,7 @@ class ISortableColumn(interface.Interface):
         according to this column.
 
         The original items sequence should not be mutated."""
+
 
 class IColumnSortedItems(interface.Interface):
     """items that support sorting by column.  setFormatter must be called
@@ -107,8 +109,8 @@ class IFormatter(interface.Interface):
 
     annotations = schema.Dict(
         title=u"Annotations",
-        description=
-        u"""Stores arbitrary application data under package-unique keys.
+        description=u"""\
+        Stores arbitrary application data under package-unique keys.
 
         By "package-unique keys", we mean keys that are are unique by
         virtue of including the dotted name of a package as a prefix.  A
@@ -122,8 +124,8 @@ class IFormatter(interface.Interface):
         """)
 
     request = schema.Field(
-        title = u'Request',
-        description = u'The request object.',
+        title=u'Request',
+        description=u'The request object.',
         )
 
     context = schema.Field(
@@ -139,38 +141,38 @@ class IFormatter(interface.Interface):
         'see getItems.')
 
     columns = schema.Tuple(
-        title = u'All the columns that make up this table.',
-        description = u'All columns that may ever be a visible column.  A non-'
+        title=u'All the columns that make up this table.',
+        description=u'All columns that may ever be a visible column.  A non-'
         u'visible column may still have an effect on operations such as '
         u'sorting.  The names of all columns must be unique within the '
         u'sequence.',
-        unique = True,
+        unique=True,
         )
 
     visible_columns = schema.Tuple(
-        title = u'The visible columns that make up this table.',
-        description = u'The columns to display when rendering this table.',
-        unique = True,
+        title=u'The visible columns that make up this table.',
+        description=u'The columns to display when rendering this table.',
+        unique=True,
         )
 
     batch_size = schema.Int(
-        title = u'Number of rows per page',
-        description = u'The number of rows to show at a time.  '
-                      u'Set to 0 for no batching.',
-        default = 20,
-        min = 0,
+        title=u'Number of rows per page',
+        description=u'The number of rows to show at a time.  '
+                    u'Set to 0 for no batching.',
+        default=20,
+        min=0,
         )
 
     batch_start = schema.Int(
-        title = u'Batch Start',
-        description = u'The starting index for batching.',
-        default = 0,
+        title=u'Batch Start',
+        description=u'The starting index for batching.',
+        default=0,
         )
 
     prefix = schema.BytesLine(
-        title = u'Prefix',
-        description = u'The prefix for all form names',
-        constraint = pythonLikeNameConstraint,
+        title=u'Prefix',
+        description=u'The prefix for all form names',
+        constraint=pythonLikeNameConstraint,
         )
 
     columns_by_name = schema.Dict(
@@ -260,6 +262,7 @@ class IFormatter(interface.Interface):
 
         Should be based on batch_start and batch_size, if set.
         """
+
 
 class IFormatterFactory(interface.Interface):
     """When called returns a table formatter.
