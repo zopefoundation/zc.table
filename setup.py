@@ -17,7 +17,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="zc.table",
-    version='0.9.1dev',
+    version='0.10.0.dev0',
     url="http://pypi.python.org/pypi/zc.table/",
     install_requires=[
         'setuptools',
@@ -62,7 +62,16 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',
-        'Framework :: Zope :: 3'],
+        'Framework :: Zope :: 3'
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+    ],
     test_suite='zc.table.tests.test_suite',
     zip_safe=False,
     )
