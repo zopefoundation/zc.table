@@ -34,10 +34,10 @@ with names and email addresses:
     >>> class IContact(interface.Interface):
     ...     name = schema.TextLine()
     ...     email = schema.TextLine(
-    ...             constraint=re.compile('\w+@\w+([.]\w+)+$').match)
+    ...             constraint=re.compile(r'\w+@\w+([.]\w+)+$').match)
 
-    >>> class Contact:
-    ...     interface.implements(IContact)
+    >>> @interface.implementer(IContact)
+    ... class Contact:
     ...     def __init__(self, id, name, email):
     ...         self.id = id
     ...         self.name = name
@@ -75,7 +75,7 @@ table formatter instantiation:
     >>> context = None
     >>> formatter = table.Formatter(
     ...     context, request, contacts, columns=columns)
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -136,7 +136,7 @@ Note that the input names include base64 encodings of the item ids.
 If the request has input for a value, then this will override item data:
 
     >>> request.form["test.NA==.email"] = u'walsh@zope.com'
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -224,10 +224,11 @@ The input function also validates input.  If there are any errors, a
 WidgetsError will be raised:
 
     >>> request.form["test.NA==.email"] = u'walsh'
-    >>> data = columns[1].input(contacts, request)
-    Traceback (most recent call last):
-    ...
-    WidgetsError: WidgetInputError:
+    >>> try:
+    ...     data = columns[1].input(contacts, formatter)
+    ... except zope.formlib.interfaces.WidgetsError as e:
+    ...     e
+    WidgetInputError:
         ('email', u'', ConstraintNotSatisfied(u'walsh', 'email'))
 
 Custom getters and setters
@@ -262,7 +263,7 @@ a bit table:
     >>> request = zope.publisher.browser.TestRequest()
     >>> formatter = table.Formatter(
     ...     context, request, data, columns=columns)
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -375,7 +376,7 @@ would do this, for example, to use a blank title:
 
     >>> formatter = table.Formatter(
     ...     context, request, data[0:1], columns=columns)
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -434,7 +435,7 @@ We'll define columns that displays name and email addresses.
     >>> context = None
     >>> formatter = table.Formatter(
     ...     context, request, bugcontacts, columns=bugcolumns)
-    >>> print formatter()
+    >>> print(formatter())
     <table>
       <thead>
         <tr>
@@ -480,7 +481,7 @@ We'll define columns that displays name and email addresses.
 
     >>> formatter = table.Formatter(
     ...     context, request, bugcontacts, columns=bug2columns)
-    >>> print formatter()
+    >>> print(formatter())
     <BLANKLINE>
     <table>
       <thead>

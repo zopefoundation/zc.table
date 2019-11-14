@@ -24,8 +24,8 @@ from zc.table import interfaces
 import zc.resourcelibrary
 
 
+@interface.implementer(interfaces.IFormatter)
 class Formatter(object):
-    interface.implements(interfaces.IFormatter)
     items = None
 
     def __init__(self, context, request, items, visible_column_names=None,
@@ -128,7 +128,7 @@ class Formatter(object):
             if not batch_start:  # ok, no work to be done.
                 for i in self.items:
                     yield i
-                raise StopIteration
+                return
             batch_end = None
         else:
             batch_end = batch_start + batch_size
@@ -145,6 +145,7 @@ class Formatter(object):
 
 # sorting helpers
 
+@interface.implementer(interfaces.IColumnSortedItems)
 class ColumnSortedItems(object):
     # not intended to be persistent!
     """a wrapper for items that sorts lazily based on ISortableColumns.
@@ -153,7 +154,6 @@ class ColumnSortedItems(object):
     with the primary sort column, and the formatter, supports iteration, len,
     and __getitem__ access including slices.
     """
-    interface.implements(interfaces.IColumnSortedItems)
 
     formatter = None
 
@@ -181,9 +181,12 @@ class ColumnSortedItems(object):
             try:
                 yield cache[ix]
             except IndexError:
-                next = iterable.next()  # let StopIteration fall through
-                cache.append(next)
-                yield next
+                try:
+                    nxt = next(iterable)
+                except StopIteration:
+                    return
+                cache.append(nxt)
+                yield nxt
             ix += 1
 
     def setFormatter(self, formatter):
@@ -215,7 +218,7 @@ class ColumnSortedItems(object):
                 return items.__getitem__(key)
             except (AttributeError, TypeError):
                 if stride != 1:
-                    raise NotImplemented
+                    raise TypeError()
                 res = []
                 for ix, val in enumerate(items):
                     if ix >= start:
@@ -228,7 +231,7 @@ class ColumnSortedItems(object):
                 elif res:
                     return res[0]
                 else:
-                    raise IndexError, 'list index out of range'
+                    raise IndexError('list index out of range')
 
         items = self.sorters[0](
             items, self.formatter, start, stop, self.sorters[1:])
@@ -240,7 +243,7 @@ class ColumnSortedItems(object):
 
     def __nonzero__(self):
         try:
-            iter(self.items).next()
+            next(iter(self.items))
         except StopIteration:
             return False
         return True
@@ -276,9 +279,7 @@ def getRequestSortOn(request, sort_on_name):
                 val[0] = ix + offset
                 val[2] = not val[2]
         if res:
-            res = res.values()
-            res.sort()
-            res.reverse()
+            res = sorted(res.values(), reverse=True)
             sort_on = [[nm, reverse] for ix, nm, reverse in res]
     return sort_on
 

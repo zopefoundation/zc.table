@@ -26,8 +26,8 @@ the item that occupies that cell.  Here's a very simple example::
 
     >>> from zope import interface
     >>> from zc.table import interfaces
-    >>> class GetItemColumn:
-    ...     interface.implements(interfaces.IColumn)
+    >>> @interface.implementer(interfaces.IColumn)
+    ... class GetItemColumn:
     ...     def __init__(self, title, name, attr):
     ...         self.title = title
     ...         self.name = name
@@ -171,7 +171,7 @@ exercise, we'll hide the second column.
 The simplest way to use a table formatter is to call it, asking the formatter
 to render the entire table::
 
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -232,7 +232,7 @@ column with cells in a special class:
     ...         html += cell + '<td>'
     ...     html += '</tr>\n'
     >>> html += '</table>'
-    >>> print html
+    >>> print(html)
     <table class="my_class">
     <tr class="header">
         <th>
@@ -254,7 +254,7 @@ classes. As you saw above, by default there are no CSS classes registered for
 the formatter. Let's now register one for the "table" element:
 
     >>> formatter.cssClasses['table'] = 'list'
-    >>> print formatter()
+    >>> print(formatter())
     <table class="list">
     ...
     </table>
@@ -263,7 +263,7 @@ This can be done for every element used in the table. Of course, you can also
 unregister the class again:
 
     >>> del formatter.cssClasses['table']
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     ...
     </table>
@@ -291,7 +291,7 @@ Typically these are passed in on instantiation, but we'll change the attributes
 on the existing formatter.
 
     >>> formatter.batch_size = 1
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -316,7 +316,7 @@ on the existing formatter.
     </table>
 
     >>> formatter.batch_start=1
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -358,7 +358,7 @@ a column that held content that was especially wide, we could do this::
     >>> formatter = table.Formatter(
     ...     context, request, items, visible_column_names=('First', 'Third'),
     ...     columns=fancy_columns)
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -418,7 +418,7 @@ odd-even row formatter that's very easy to use::
 
     >>> formatter = table.AlternatingRowFormatter(
     ...     context, request, items, ('First', 'Third'), columns=columns)
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -463,7 +463,7 @@ define `row_classes` on your instance: the default is a tuple of "even" and
 "odd", but "green" and "red" will work as well:
 
     >>> formatter.row_classes = ("red", "green")
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -507,7 +507,7 @@ Note that this formatter also plays nicely with the other CSS classes defined
 by the formatter:
 
     >>> formatter.cssClasses['tr'] = 'list'
-    >>> print formatter()
+    >>> print(formatter())
     <table>
       <thead>
         <tr class="list">
@@ -562,7 +562,7 @@ encounter.
     >>> formatter = table.SortingFormatter(
     ...     context, request, items, ('First', 'Third'), columns=columns,
     ...     sort_on=(('Second', True),))
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -621,7 +621,7 @@ sort columns will only be honored when passed to the class on instanciation.
     >>> formatter = table.SortingFormatter(
     ...     context, request, big_items, ('First', 'Third'), columns=columns,
     ...     sort_on=(('First', True), ('Third', False)))
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -691,7 +691,7 @@ sort::
     >>> formatter = table.SortingFormatter(
     ...     context, request, big_items, ('First', 'Third'), columns=columns,
     ...     sort_on=(('First', False), ('Third', False)))
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -760,7 +760,7 @@ When batching sorted tables, the sorting is applied first, then the batching::
     >>> formatter = table.SortingFormatter(
     ...     context, request, items, ('First', 'Third'), columns=columns,
     ...     batch_start=1, sort_on=(('Second', True),))
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -814,7 +814,7 @@ be no sorting information.
     >>> request = zope.publisher.browser.TestRequest()
     >>> formatter = table.FormSortFormatter(
     ...     context, request, items, ('First', 'Third'), columns=columns)
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -871,7 +871,7 @@ Setting a prefix also affects the value used to store the sorting information.
     ...     context, request, items, ('First', 'Third'),
     ...     prefix='slot.first', columns=columns)
     >>> sort_on_name = table.getSortOnName(formatter.prefix)
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -930,7 +930,7 @@ the second column in reverse order.
     >>> formatter = table.FormSortFormatter(
     ...     context, request, items, ('First', 'Third'),
     ...     prefix='slot.first', columns=columns)
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -1004,7 +1004,7 @@ search.
     True
     >>> formatter.items.sort_on
     [['First', True], ['Third', False]]
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -1101,7 +1101,7 @@ above.
     ...     prefix='slot.first', sort_on=(('Second', False), ('Third', True)))
     >>> formatter.items.sort_on
     [['First', True], ['Third', False], ['Second', False]]
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -1195,7 +1195,7 @@ Unsorted:
     ...     columns=columns, batch_size=2)
     >>> formatter.items[0] is not None # artifically provoke error :-(
     True
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -1234,7 +1234,7 @@ Sorted:
     ...     columns=columns, sort_on=(('Second', True),), batch_size=2)
     >>> formatter.items[0] is not None # artifically provoke error :-(
     True
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>

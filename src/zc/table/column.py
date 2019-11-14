@@ -16,6 +16,8 @@
 $Id: column.py 4318 2005-12-06 03:41:37Z gary $
 """
 import warnings
+import sys
+from base64 import b64encode
 from xml.sax.saxutils import quoteattr
 
 from zope import interface, component, schema, i18n
@@ -25,8 +27,14 @@ from zope.formlib.interfaces import WidgetInputError, WidgetsError
 from zc.table import interfaces
 
 
+if sys.version_info < (3,):
+    TEXT_TYPE = unicode
+else:
+    TEXT_TYPE = str
+
+
+@interface.implementer(interfaces.IColumn)
 class Column(object):
-    interface.implements(interfaces.IColumn)
     title = None
     name = None
 
@@ -45,8 +53,8 @@ class Column(object):
                                   'own renderCell method.')
 
 
+@interface.implementer(interfaces.ISortableColumn)
 class SortingColumn(Column):
-    interface.implements(interfaces.ISortableColumn)
 
     # sort and reversesort are part of ISortableColumn, not IColumn, but are
     # put here to provide a reasonable default implementation.
@@ -63,8 +71,8 @@ class SortingColumn(Column):
         getSortKey = self.getSortKey
 
         items.sort(
-            cmp=lambda a, b: multiplier*cmp(a, b),
-            key=lambda item: getSortKey(item, formatter))
+            key=lambda item: getSortKey(item, formatter),
+            reverse=(multiplier == -1))
 
         return items
 
@@ -81,6 +89,7 @@ class SortingColumn(Column):
         raise NotImplementedError
 
 
+@interface.implementer_only(interfaces.IColumn)
 class GetterColumn(SortingColumn):
     """Column for simple use cases.
 
@@ -90,7 +99,6 @@ class GetterColumn(SortingColumn):
     cell_formatter - a callable that is passed the result of getter, the
         item, and the table formatter; returns the formatted HTML
     """
-    interface.implementsOnly(interfaces.IColumn)
 
     def __init__(self, title=None, getter=None, cell_formatter=None,
                  name=None, subsort=False):
@@ -106,9 +114,9 @@ class GetterColumn(SortingColumn):
         return item
 
     def cell_formatter(self, value, item, formatter):
-        return unicode(value).replace('&', '&#38;') \
-                              .replace('<', '&#60;') \
-                              .replace('>', '&#62;')
+        return TEXT_TYPE(value).replace('&', '&#38;') \
+                               .replace('<', '&#60;') \
+                               .replace('>', '&#62;')
 
     def renderCell(self, item, formatter):
         value = self.getter(item, formatter)
@@ -154,7 +162,7 @@ class FieldEditColumn(Column):
         self.widget_extra = widget_extra
 
     def makeId(self, item):
-        return ''.join(self.idgetter(item).encode('base64').split())
+        return b64encode(self.idgetter(item).encode('utf-8')).decode('ascii')
 
     def input(self, items, request):
         if not hasattr(request, 'form'):
@@ -180,7 +188,7 @@ class FieldEditColumn(Column):
             if widget.hasInput():
                 try:
                     data[id] = widget.getInputValue()
-                except WidgetInputError, v:
+                except WidgetInputError as v:
                     errors.append(v)
 
         if errors:

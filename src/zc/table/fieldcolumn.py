@@ -141,7 +141,7 @@ class FieldColumn(BaseColumn):
             if widget.hasInput():
                 try:
                     data[self.getId(item, formatter)] = widget.getInputValue()
-                except WidgetInputError, v:
+                except WidgetInputError as v:
                     errors.append(v)
         if errors:
             raise WidgetsError(errors)

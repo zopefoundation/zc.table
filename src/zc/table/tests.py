@@ -15,6 +15,8 @@
 
 $Id: tests.py 4428 2005-12-13 23:35:48Z gary $
 """
+import doctest
+import re
 import unittest
 from zope import component
 from zope.component.testing import setUp, tearDown
@@ -65,21 +67,44 @@ def fieldColumnSetUp(test):
         zope.formlib.interfaces.IDisplayWidget)
 
 
+# Strip out u'' literals in doctests, adapted from
+# <https://stackoverflow.com/a/56507895>.
+class Py23OutputChecker(doctest.OutputChecker, object):
+
+    RE = re.compile(r"(\W|^)[uU]([rR]?[\'\"])", re.UNICODE)
+
+    def remove_u(self, want, got):
+        return (re.sub(self.RE, r'\1\2', want),
+                re.sub(self.RE, r'\1\2', got))
+
+    def check_output(self, want, got, optionflags):
+        want, got = self.remove_u(want, got)
+        return super(Py23OutputChecker, self).check_output(
+            want, got, optionflags)
+
+    def output_difference(self, example, got, optionflags):
+        example.want, got = self.remove_u(example.want, got)
+        return super(Py23OutputChecker, self).output_difference(
+            example, got, optionflags)
+
+
 def test_suite():
-    import doctest
     return unittest.TestSuite((
         doctest.DocFileSuite(
             'README.txt',
             optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
+            checker=Py23OutputChecker(),
         ),
         doctest.DocFileSuite(
             'column.txt',
             setUp=columnSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
+            checker=Py23OutputChecker(),
             ),
         doctest.DocFileSuite(
             'fieldcolumn.txt',
             setUp=fieldColumnSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
+            checker=Py23OutputChecker(),
             ),
         ))
