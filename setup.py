@@ -13,11 +13,7 @@
 ##############################################################################
 """Setup for zc.table package
 """
-import os
 from setuptools import setup, find_packages
-
-def read(*rnames):
-    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
 setup(
     name="zc.table",
@@ -51,9 +47,9 @@ setup(
     author_email='zope-dev@zope.org',
     description="Zope table",
     long_description=(
-        read('README.txt')
+        open('README.txt').read()
         + '\n\n' +
-        read('CHANGES.txt')
+        open('CHANGES.txt').read()
         ),
     license='ZPL 2.1',
     keywords="zope zope3",
