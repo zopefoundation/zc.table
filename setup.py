@@ -63,5 +63,6 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',
         'Framework :: Zope :: 3'],
+    test_suite='zc.table.tests.test_suite',
     zip_safe=False,
     )
