@@ -18,7 +18,7 @@ from setuptools import setup, find_packages
 setup(
     name="zc.table",
     version='0.10.0.dev0',
-    url="http://pypi.python.org/pypi/zc.table/",
+    url="https://github.com/zopefoundation/zc.table/",
     install_requires=[
         'setuptools',
         'zc.resourcelibrary >= 0.6',
