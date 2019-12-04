@@ -40,6 +40,7 @@ setup(
     ],
     extras_require=dict(
         test=['zope.testing',
+              'zope.testrunner',
               'zope.publisher']),
     packages=find_packages('src'),
     package_dir= {'':'src'},
@@ -78,6 +79,5 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    test_suite='zc.table.tests.test_suite',
     zip_safe=False,
     )
