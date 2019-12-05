@@ -88,17 +88,22 @@ class Py23OutputChecker(doctest.OutputChecker, object):
             example, got, optionflags)
 
 
+DOCTEST_FLAGS = (doctest.NORMALIZE_WHITESPACE|
+                 doctest.ELLIPSIS|
+                 doctest.IGNORE_EXCEPTION_DETAIL)
+
+
 def test_suite():
     return unittest.TestSuite((
         doctest.DocFileSuite(
             'README.txt',
-            optionflags=doctest.NORMALIZE_WHITESPACE|doctest.ELLIPSIS,
+            optionflags=DOCTEST_FLAGS,
             checker=Py23OutputChecker(),
         ),
         doctest.DocFileSuite(
             'column.txt',
             setUp=columnSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE|doctest.ELLIPSIS,
+            optionflags=DOCTEST_FLAGS,
             checker=Py23OutputChecker(),
             ),
         doctest.DocFileSuite(

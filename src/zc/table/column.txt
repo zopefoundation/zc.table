@@ -224,12 +224,12 @@ The input function also validates input.  If there are any errors, a
 WidgetsError will be raised:
 
     >>> request.form["test.NA==.email"] = u'walsh'
-    >>> try:
-    ...     data = columns[1].input(contacts, formatter)
-    ... except zope.formlib.interfaces.WidgetsError as e:
-    ...     e
-    WidgetInputError:
+    >>> data = columns[1].input(contacts, request)
+    Traceback (most recent call last):
+    ...
+    zope.formlib.interfaces.WidgetsError: WidgetInputError:
         ('email', u'', ConstraintNotSatisfied(u'walsh', 'email'))
+
 
 Custom getters and setters
 --------------------------
