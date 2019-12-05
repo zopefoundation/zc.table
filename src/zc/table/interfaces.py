@@ -109,7 +109,7 @@ class IFormatter(interface.Interface):
 
     annotations = schema.Dict(
         title=u"Annotations",
-        description=(u'Stores arbitrary application data under '
+        description=u'Stores arbitrary application data under '
         'package-unique keys. '
         'By "package-unique keys", we mean keys that are are unique by '
         'virtue of including the dotted name of a package as a prefix. '
