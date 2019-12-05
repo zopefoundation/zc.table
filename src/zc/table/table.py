@@ -218,7 +218,7 @@ class ColumnSortedItems(object):
                 return items.__getitem__(key)
             except (AttributeError, TypeError):
                 if stride != 1:
-                    raise TypeError()
+                    raise NotImplementedError()
                 res = []
                 for ix, val in enumerate(items):
                     if ix >= start:
