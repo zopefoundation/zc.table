@@ -43,7 +43,7 @@ def toSafe(string):
 
 class BaseColumn(column.Column):
 
-    # subclass helper API (not expected to be overridden) ######
+    # subclass helper API (not expected to be overridden)
 
     def getPrefix(self, item, formatter):
         prefix = self.getId(item, formatter)
@@ -64,7 +64,7 @@ class BaseColumn(column.Column):
     def getAnnotation(self, name, formatter, default=None):
         return formatter.annotations.get(self.key + name, default)
 
-    # subclass customization API ######
+    # subclass customization API
 
     def getId(self, item, formatter):
         return toSafe(str(item))
@@ -89,7 +89,7 @@ class FieldColumn(BaseColumn):
             name = self.field.__name__
         super(FieldColumn, self).__init__(title, name)
 
-    # subclass helper API (not expected to be overridden) ######
+    # subclass helper API (not expected to be overridden)
 
     def getInputWidget(self, item, formatter):
         form_field = self.field
@@ -120,7 +120,7 @@ class FieldColumn(BaseColumn):
             widget.setRenderedValue(self.get(item, formatter))
         return widget
 
-    # subclass customization API ######
+    # subclass customization API
 
     def get(self, item, formatter):
         return self.field.field.get(item)
@@ -131,7 +131,7 @@ class FieldColumn(BaseColumn):
     def getFieldContext(self, item, formatter):
         return None
 
-    # main API: input, update, and custom renderCell ######
+    # main API: input, update, and custom renderCell
 
     def input(self, items, formatter):
         data = {}
@@ -167,7 +167,7 @@ class FieldColumn(BaseColumn):
 
 class SubmitColumn(BaseColumn):
 
-    # subclass helper API (not expected to be overridden) ######
+    # subclass helper API (not expected to be overridden)
 
     def getIdentifier(self, item, formatter):
         return '%s.%s' % (self.getPrefix(item, formatter), self.name)
@@ -182,12 +182,12 @@ class SubmitColumn(BaseColumn):
             'value=%s' % quoteattr(lbl)]
         return '<%s />' % (' '.join(res))
 
-    # customization API (expected to be overridden) ######
+    # customization API (expected to be overridden)
 
     def getLabel(self, item, formatter):
         return super(SubmitColumn, self).renderHeader(formatter)  # title
 
-    # basic API ######
+    # basic API
 
     def input(self, items, formatter):
         for item in items:
