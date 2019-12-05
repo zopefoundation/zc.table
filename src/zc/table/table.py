@@ -135,7 +135,7 @@ class Formatter(object):
         try:
             for i in self.items[batch_start:batch_end]:
                 yield i
-        except (AttributeError, TypeError):
+        except (AttributeError, TypeError, NotImplementedError):
             for i, item in enumerate(self.items):
                 if batch_end is not None and i >= batch_end:
                     return
