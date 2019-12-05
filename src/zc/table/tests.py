@@ -92,19 +92,19 @@ def test_suite():
     return unittest.TestSuite((
         doctest.DocFileSuite(
             'README.txt',
-            optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
+            optionflags=doctest.NORMALIZE_WHITESPACE|doctest.ELLIPSIS,
             checker=Py23OutputChecker(),
         ),
         doctest.DocFileSuite(
             'column.txt',
             setUp=columnSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
+            optionflags=doctest.NORMALIZE_WHITESPACE|doctest.ELLIPSIS,
             checker=Py23OutputChecker(),
             ),
         doctest.DocFileSuite(
             'fieldcolumn.txt',
             setUp=fieldColumnSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE+doctest.ELLIPSIS,
+            optionflags=doctest.NORMALIZE_WHITESPACE|doctest.ELLIPSIS,
             checker=Py23OutputChecker(),
             ),
         ))
