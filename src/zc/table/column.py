@@ -63,7 +63,7 @@ class SortingColumn(Column):
         self.subsort = subsort
         super(SortingColumn, self).__init__(title, name)
 
-    def _sort(self, items, formatter, start, stop, sorters, multiplier):
+    def _sort(self, items, formatter, start, stop, sorters, reverse=False):
         if self.subsort and sorters:
             items = sorters[0](items, formatter, start, stop, sorters[1:])
         else:
@@ -72,15 +72,15 @@ class SortingColumn(Column):
 
         items.sort(
             key=lambda item: getSortKey(item, formatter),
-            reverse=(multiplier == -1))
+            reverse=reverse)
 
         return items
 
     def sort(self, items, formatter, start, stop, sorters):
-        return self._sort(items, formatter, start, stop, sorters, 1)
+        return self._sort(items, formatter, start, stop, sorters)
 
     def reversesort(self, items, formatter, start, stop, sorters):
-        return self._sort(items, formatter, start, stop, sorters, -1)
+        return self._sort(items, formatter, start, stop, sorters, reverse=True)
 
     # this is a convenience to override if you just want to keep the basic
     # implementation but change the comparison values.
