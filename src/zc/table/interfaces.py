@@ -109,19 +109,19 @@ class IFormatter(interface.Interface):
 
     annotations = schema.Dict(
         title=u"Annotations",
-        description=u"""\
-        Stores arbitrary application data under package-unique keys.
+        description=(
+            u'Stores arbitrary application data under package-unique keys.'\
+            u''
+            u'By "package-unique keys", we mean keys that are are unique by '
+            virtue of including the dotted name of a package as a prefix.  A
+            package name is used to limit the authority for picking names for
+            a package to the people using that package.
 
-        By "package-unique keys", we mean keys that are are unique by
-        virtue of including the dotted name of a package as a prefix.  A
-        package name is used to limit the authority for picking names for
-        a package to the people using that package.
+            For example, when implementing annotations for a zc.foo package,
+            the key would be (or at least begin with) the following::
 
-        For example, when implementing annotations for a zc.foo package, the
-        key would be (or at least begin with) the following::
-
-          "zc.foo"
-        """)
+              "zc.foo"
+            """)
 
     request = schema.Field(
         title=u'Request',
