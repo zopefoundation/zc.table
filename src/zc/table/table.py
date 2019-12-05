@@ -241,12 +241,14 @@ class ColumnSortedItems(object):
         else:
             return items[key]
 
-    def __nonzero__(self):
+    def __bool__(self):
         try:
             next(iter(self.items))
         except StopIteration:
             return False
         return True
+
+    __nonzero__ = __bool__
 
     def __iter__(self):
         if not self.sort_on:
