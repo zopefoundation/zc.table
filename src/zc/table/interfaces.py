@@ -109,19 +109,16 @@ class IFormatter(interface.Interface):
 
     annotations = schema.Dict(
         title=u"Annotations",
-        description=(
-            u'Stores arbitrary application data under package-unique keys.'\
-            u''
-            u'By "package-unique keys", we mean keys that are are unique by '
-            virtue of including the dotted name of a package as a prefix.  A
-            package name is used to limit the authority for picking names for
-            a package to the people using that package.
-
-            For example, when implementing annotations for a zc.foo package,
-            the key would be (or at least begin with) the following::
-
-              "zc.foo"
-            """)
+        description=(u'Stores arbitrary application data under '
+        'package-unique keys. '
+        'By "package-unique keys", we mean keys that are are unique by '
+        'virtue of including the dotted name of a package as a prefix. '
+        'A package name is used to limit the authority for picking names '
+        'for a package to the people using that package. '
+        'For example, when implementing annotations for a zc.foo package, '
+        'the key would be (or at least begin with) the following::'
+        ''
+        ' "zc.foo"')
 
     request = schema.Field(
         title=u'Request',
@@ -143,9 +140,9 @@ class IFormatter(interface.Interface):
     columns = schema.Tuple(
         title=u'All the columns that make up this table.',
         description=u'All columns that may ever be a visible column.  A non-'
-        u'visible column may still have an effect on operations such as '
-        u'sorting.  The names of all columns must be unique within the '
-        u'sequence.',
+        'visible column may still have an effect on operations such as '
+        'sorting.  The names of all columns must be unique within the '
+        'sequence.',
         unique=True,
         )
 
