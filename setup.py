@@ -16,13 +16,16 @@
 import os
 from setuptools import setup, find_packages
 
+
 def read(*rnames):
-    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
+    with  open(os.path.join(os.path.dirname(__file__), *rnames)) as f:
+        return f.read()
+
 
 setup(
     name="zc.table",
-    version='0.9.1dev',
-    url="http://pypi.python.org/pypi/zc.table/",
+    version='0.10.0.dev0',
+    url="https://github.com/zopefoundation/zc.table/",
     install_requires=[
         'setuptools',
         'zc.resourcelibrary >= 0.6',
@@ -37,6 +40,7 @@ setup(
     ],
     extras_require=dict(
         test=['zope.testing',
+              'zope.testrunner',
               'zope.publisher']),
     packages=find_packages('src'),
     package_dir= {'':'src'},
@@ -66,6 +70,14 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',
-        'Framework :: Zope :: 3'],
+        'Framework :: Zope :: 3'
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+    ],
     zip_safe=False,
     )

@@ -57,14 +57,14 @@ with names and email addresses:
     ...     name = schema.TextLine(title=u'Name')
     ...     email = schema.TextLine(
     ...             title=u'Email Address',
-    ...             constraint=re.compile('\w+@\w+([.]\w+)+$').match)
+    ...             constraint=re.compile(r'\w+@\w+([.]\w+)+$').match)
     ...     salutation = schema.Choice(
     ...             title=u'Salutation',
     ...             values = ['Mr','Ms'],
     ...             )
 
-    >>> class Contact:
-    ...     interface.implements(IContact)
+    >>> @interface.implementer(IContact)
+    ... class Contact:
     ...     def __init__(self, id, name, email, salutation):
     ...         self.id = id
     ...         self.name = name
@@ -105,7 +105,7 @@ table formatter instantiation:
     >>> context = None
     >>> formatter = table.Formatter(
     ...     context, request, contacts, columns=columns, prefix='test')
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -222,7 +222,7 @@ because they already match the necessary constraints.
 If the request has input for a value, then this will override item data:
 
     >>> request.form["test.4.email"] = u'walsh@zope.com'
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>
@@ -365,10 +365,11 @@ The input function also validates input.  If there are any errors, a
 WidgetsError will be raised:
 
     >>> request.form["test.4.email"] = u'walsh'
-    >>> data = columns[1].input(contacts, formatter)
-    Traceback (most recent call last):
-      ...
-    WidgetsError: WidgetInputError:
+    >>> try:
+    ...     data = columns[1].input(contacts, formatter)
+    ... except zope.formlib.interfaces.WidgetsError as e:
+    ...     e
+    WidgetInputError:
         ('email', u'Email Address', ConstraintNotSatisfied(u'walsh', 'email'))
 
 Custom getters and setters
@@ -401,7 +402,7 @@ a bit table:
     >>> request = zope.publisher.browser.TestRequest()
     >>> formatter = table.Formatter(
     ...     context, request, data, columns=columns, prefix='test')
-    >>> print formatter()
+    >>> print(formatter())
     <table>
     <thead>
       <tr>

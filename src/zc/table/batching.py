@@ -21,6 +21,7 @@ import zc.table.interfaces
 
 unspecified = object()
 
+
 class Formatter(zc.table.table.FormSortFormatterMixin,
                 zc.table.table.AlternatingRowFormatterMixin,
                 zc.table.table.Formatter):
@@ -62,9 +63,11 @@ class Formatter(zc.table.table.FormSortFormatterMixin,
             if not self._batch_start_computed:
                 self.updateBatching()
             return self._batch_start
+
         def fset(self, value):
             self._batch_start = value
             self._batch_start_computed = False
+
         def fdel(self):
             self._batch_start = None
         return property(fget, fset, fdel)
@@ -108,6 +111,7 @@ class Formatter(zc.table.table.FormSortFormatterMixin,
         self._batch_start_computed = True
 
     batching_template = ViewPageTemplateFile('batching.pt')
+
     def renderExtra(self):
         if not self._batch_start_computed:
             self.updateBatching()
@@ -123,4 +127,4 @@ class Formatter(zc.table.table.FormSortFormatterMixin,
                 '</table>\n'
                 + self.renderExtra() +
                 '</div> <!-- end IE bug workaround -->\n'
-               )
+                )

@@ -27,7 +27,8 @@ class SimpleFormatter(zc.table.table.Formatter):
 def setUp(test):
     gsm = component.getGlobalSiteManager()
     gsm.registerUtility(SimpleFormatter, zc.table.interfaces.IFormatterFactory)
-    assert component.getUtility(zc.table.interfaces.IFormatterFactory) != None
+    assert component.getUtility(
+        zc.table.interfaces.IFormatterFactory) is not None
 
 
 def tearDown(test):

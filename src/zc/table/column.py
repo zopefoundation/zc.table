@@ -16,6 +16,8 @@
 $Id: column.py 4318 2005-12-06 03:41:37Z gary $
 """
 import warnings
+import sys
+from base64 import b64encode
 from xml.sax.saxutils import quoteattr
 
 from zope import interface, component, schema, i18n
@@ -24,8 +26,15 @@ from zope.formlib.interfaces import WidgetInputError, WidgetsError
 
 from zc.table import interfaces
 
+
+if sys.version_info < (3,):
+    TEXT_TYPE = unicode
+else:
+    TEXT_TYPE = str
+
+
+@interface.implementer(interfaces.IColumn)
 class Column(object):
-    interface.implements(interfaces.IColumn)
     title = None
     name = None
 
@@ -43,8 +52,9 @@ class Column(object):
         raise NotImplementedError('Subclasses must provide their '
                                   'own renderCell method.')
 
+
+@interface.implementer(interfaces.ISortableColumn)
 class SortingColumn(Column):
-    interface.implements(interfaces.ISortableColumn)
 
     # sort and reversesort are part of ISortableColumn, not IColumn, but are
     # put here to provide a reasonable default implementation.
@@ -53,24 +63,24 @@ class SortingColumn(Column):
         self.subsort = subsort
         super(SortingColumn, self).__init__(title, name)
 
-    def _sort(self, items, formatter, start, stop, sorters, multiplier):
+    def _sort(self, items, formatter, start, stop, sorters, reverse=False):
         if self.subsort and sorters:
             items = sorters[0](items, formatter, start, stop, sorters[1:])
         else:
-            items = list(items) # don't mutate original
+            items = list(items)  # don't mutate original
         getSortKey = self.getSortKey
 
         items.sort(
-            cmp=lambda a, b: multiplier*cmp(a, b),
-            key=lambda item: getSortKey(item, formatter))
+            key=lambda item: getSortKey(item, formatter),
+            reverse=reverse)
 
         return items
 
     def sort(self, items, formatter, start, stop, sorters):
-        return self._sort(items, formatter, start, stop, sorters, 1)
+        return self._sort(items, formatter, start, stop, sorters)
 
     def reversesort(self, items, formatter, start, stop, sorters):
-        return self._sort(items, formatter, start, stop, sorters, -1)
+        return self._sort(items, formatter, start, stop, sorters, reverse=True)
 
     # this is a convenience to override if you just want to keep the basic
     # implementation but change the comparison values.
@@ -78,6 +88,8 @@ class SortingColumn(Column):
     def getSortKey(self, item, formatter):
         raise NotImplementedError
 
+
+@interface.implementer_only(interfaces.IColumn)
 class GetterColumn(SortingColumn):
     """Column for simple use cases.
 
@@ -87,9 +99,8 @@ class GetterColumn(SortingColumn):
     cell_formatter - a callable that is passed the result of getter, the
         item, and the table formatter; returns the formatted HTML
     """
-    interface.implementsOnly(interfaces.IColumn)
 
-    def __init__(self, title=None, getter=None, cell_formatter=None, 
+    def __init__(self, title=None, getter=None, cell_formatter=None,
                  name=None, subsort=False):
         if getter is not None:
             self.getter = getter
@@ -103,9 +114,9 @@ class GetterColumn(SortingColumn):
         return item
 
     def cell_formatter(self, value, item, formatter):
-        return unicode(value).replace('&', '&#38;') \
-                              .replace('<', '&#60;') \
-                              .replace('>', '&#62;')
+        return TEXT_TYPE(value).replace('&', '&#38;') \
+                               .replace('<', '&#60;') \
+                               .replace('>', '&#62;')
 
     def renderCell(self, item, formatter):
         value = self.getter(item, formatter)
@@ -123,6 +134,7 @@ class MailtoColumn(GetterColumn):
         email = super(MailtoColumn, self).renderCell(item, formatter)
         return '<a href="mailto:%s">%s</a>' % (email, email)
 
+
 class FieldEditColumn(Column):
     """Columns that supports field/widget update
 
@@ -130,12 +142,12 @@ class FieldEditColumn(Column):
     """
 
     def __init__(self, title=None, prefix=None, field=None,
-                 idgetter=None, getter=None, setter=None, name='', bind=False, 
+                 idgetter=None, getter=None, setter=None, name='', bind=False,
                  widget_class=None, widget_extra=None):
         super(FieldEditColumn, self).__init__(title, name)
-        assert prefix is not None # this is required
-        assert field is not None # this is required
-        assert idgetter is not None # this is required
+        assert prefix is not None  # this is required
+        assert field is not None  # this is required
+        assert idgetter is not None  # this is required
         self.prefix = prefix
         self.field = field
         self.idgetter = idgetter
@@ -150,7 +162,7 @@ class FieldEditColumn(Column):
         self.widget_extra = widget_extra
 
     def makeId(self, item):
-        return ''.join(self.idgetter(item).encode('base64').split())
+        return b64encode(self.idgetter(item).encode('utf-8')).decode('ascii')
 
     def input(self, items, request):
         if not hasattr(request, 'form'):
@@ -176,7 +188,7 @@ class FieldEditColumn(Column):
             if widget.hasInput():
                 try:
                     data[id] = widget.getInputValue()
-                except WidgetInputError, v:
+                except WidgetInputError as v:
                     errors.append(v)
 
         if errors:
@@ -226,9 +238,9 @@ class SelectionColumn(FieldEditColumn):
             else:
                 prefix = 'selection_column'
         if getter is None:
-            getter = lambda item: False
+            getter = lambda item: False  # noqa
         if setter is None:
-            setter = lambda item, value: None
+            setter = lambda item, value: None  # noqa
         if title is None:
             title = field.title or ""
         self.hide_header = hide_header
@@ -247,20 +259,22 @@ class SelectionColumn(FieldEditColumn):
         data = self.input(items, request)
         return [item for item in items if data.get(self.makeId(item))]
 
+
 class SubmitColumn(Column):
+
     def __init__(self, title=None, prefix=None, idgetter=None, action=None,
                  labelgetter=None, condition=None,
                  extra=None, cssClass=None, renderer=None, name=''):
         super(SubmitColumn, self).__init__(title, name)
         # hacked together. :-/
-        assert prefix is not None # this is required
-        assert idgetter is not None # this is required
-        assert labelgetter is not None # this is required
-        assert action is not None # this is required
+        assert prefix is not None  # this is required
+        assert idgetter is not None  # this is required
+        assert labelgetter is not None  # this is required
+        assert action is not None  # this is required
         self.prefix = prefix
         self.idgetter = idgetter
         self.action = action
-        self.renderer=renderer
+        self.renderer = renderer
         self.condition = condition
         self.extra = extra
         self.cssClass = cssClass

@@ -23,8 +23,9 @@ import zope.cachedescriptors.property
 from zc.table import interfaces
 import zc.resourcelibrary
 
+
+@interface.implementer(interfaces.IFormatter)
 class Formatter(object):
-    interface.implements(interfaces.IFormatter)
     items = None
 
     def __init__(self, context, request, items, visible_column_names=None,
@@ -77,7 +78,7 @@ class Formatter(object):
                 self.renderRows())
 
     def renderHeaderRow(self):
-        return '    <tr%s>\n%s    </tr>\n' %(
+        return '    <tr%s>\n%s    </tr>\n' % (
             self._getCSSClass('tr'), self.renderHeaders())
 
     def renderHeaders(self):
@@ -124,25 +125,27 @@ class Formatter(object):
         batch_start = self.batch_start or 0
         batch_size = self.batch_size or 0
         if not self.batch_size:
-            if not batch_start: # ok, no work to be done.
+            if not batch_start:  # ok, no work to be done.
                 for i in self.items:
                     yield i
-                raise StopIteration
+                return
             batch_end = None
         else:
             batch_end = batch_start + batch_size
         try:
             for i in self.items[batch_start:batch_end]:
                 yield i
-        except (AttributeError, TypeError):
+        except (AttributeError, TypeError, NotImplementedError):
             for i, item in enumerate(self.items):
                 if batch_end is not None and i >= batch_end:
                     return
                 if i >= batch_start:
                     yield item
 
+
 # sorting helpers
 
+@interface.implementer(interfaces.IColumnSortedItems)
 class ColumnSortedItems(object):
     # not intended to be persistent!
     """a wrapper for items that sorts lazily based on ISortableColumns.
@@ -151,13 +154,12 @@ class ColumnSortedItems(object):
     with the primary sort column, and the formatter, supports iteration, len,
     and __getitem__ access including slices.
     """
-    interface.implements(interfaces.IColumnSortedItems)
 
     formatter = None
 
     def __init__(self, items, sort_on):
         self._items = items
-        self.sort_on = sort_on # tuple of (column name, reversed) pairs
+        self.sort_on = sort_on  # tuple of (column name, reversed) pairs
         self._cache = []
         self._iterable = None
 
@@ -179,9 +181,12 @@ class ColumnSortedItems(object):
             try:
                 yield cache[ix]
             except IndexError:
-                next = iterable.next() # let StopIteration fall through
-                cache.append(next)
-                yield next
+                try:
+                    nxt = next(iterable)
+                except StopIteration:
+                    return
+                cache.append(nxt)
+                yield nxt
             ix += 1
 
     def setFormatter(self, formatter):
@@ -213,7 +218,7 @@ class ColumnSortedItems(object):
                 return items.__getitem__(key)
             except (AttributeError, TypeError):
                 if stride != 1:
-                    raise NotImplemented
+                    raise NotImplementedError()
                 res = []
                 for ix, val in enumerate(items):
                     if ix >= start:
@@ -226,7 +231,7 @@ class ColumnSortedItems(object):
                 elif res:
                     return res[0]
                 else:
-                    raise IndexError, 'list index out of range'
+                    raise IndexError('list index out of range')
 
         items = self.sorters[0](
             items, self.formatter, start, stop, self.sorters[1:])
@@ -236,12 +241,14 @@ class ColumnSortedItems(object):
         else:
             return items[key]
 
-    def __nonzero__(self):
+    def __bool__(self):
         try:
-            iter(self.items).next()
+            next(iter(self.items))
         except StopIteration:
             return False
         return True
+
+    __nonzero__ = __bool__
 
     def __iter__(self):
         if not self.sort_on:
@@ -253,6 +260,7 @@ class ColumnSortedItems(object):
 
     def __len__(self):
         return len(self.items)
+
 
 def getRequestSortOn(request, sort_on_name):
     """get the sorting values from the request.
@@ -273,11 +281,10 @@ def getRequestSortOn(request, sort_on_name):
                 val[0] = ix + offset
                 val[2] = not val[2]
         if res:
-            res = res.values()
-            res.sort()
-            res.reverse()
+            res = sorted(res.values(), reverse=True)
             sort_on = [[nm, reverse] for ix, nm, reverse in res]
     return sort_on
+
 
 def getMungedSortOn(request, sort_on_name, sort_on):
     """get the sorting values from the request.
@@ -297,6 +304,7 @@ def getMungedSortOn(request, sort_on_name, sort_on):
             else:
                 res.append([nm, reverse])
     return res
+
 
 def getSortOnName(prefix=None):
     """convert the table prefix to the 'sort on' name used in forms"""
@@ -332,16 +340,17 @@ class SortingFormatterMixin(object):
 
     def setItems(self, items):
         if (interfaces.IColumnSortedItems.providedBy(self.items) and
-            not interfaces.IColumnSortedItems.providedBy(items)):
+                not interfaces.IColumnSortedItems.providedBy(items)):
             items = ColumnSortedItems(items, self.items.sort_on)
         if interfaces.IColumnSortedItems.providedBy(items):
             items.setFormatter(self)
         self.items = items
 
+
 class AbstractSortFormatterMixin(object):
     """provides sorting UI: concrete classes must declare script_name."""
 
-    script_name = None # Must be defined in subclass
+    script_name = None  # Must be defined in subclass
 
     def getHeader(self, column):
         contents = column.renderHeader(self)
@@ -353,7 +362,7 @@ class AbstractSortFormatterMixin(object):
         columnName = column.name
         resource_path = component.getAdapter(self.request, name='zc.table')()
         if (interfaces.IColumnSortedItems.providedBy(self.items) and
-            self.items.sort_on):
+                self.items.sort_on):
             sortColumnName, sortReversed = self.items.sort_on[0]
         else:
             sortColumnName = sortReversed = None
@@ -382,11 +391,13 @@ class AbstractSortFormatterMixin(object):
             <span class="zc-table-sortable"
                   onclick="javascript: %(script_name)s(
                         '%(columnName)s', '%(sort_on_name)s')"
-                    onMouseOver="javascript: this.className='sortable zc-table-sortable'"
-                    onMouseOut="javascript: this.className='zc-table-sortable'">
+                  onMouseOver="javascript:
+                      this.className='sortable zc-table-sortable'"
+                  onMouseOut="javascript: this.className='zc-table-sortable'">
                 %(header)s</span> %(dirIndicator)s
         """
         return template % options
+
 
 class StandaloneSortFormatterMixin(AbstractSortFormatterMixin):
     "A version of the sort formatter mixin for standalone tables, not forms"
@@ -422,7 +433,7 @@ class FormSortFormatterMixin(AbstractSortFormatterMixin):
     def renderExtra(self):
         """Render the hidden input field used to keep up with sorting"""
         if (interfaces.IColumnSortedItems.providedBy(self.items) and
-            self.items.sort_on):
+                self.items.sort_on):
             value = []
             for name, reverse in reversed(self.items.sort_on):
                 value.append(name)
@@ -441,11 +452,12 @@ class FormSortFormatterMixin(AbstractSortFormatterMixin):
 
     def setItems(self, items):
         if (interfaces.IColumnSortedItems.providedBy(self.items) and
-            not interfaces.IColumnSortedItems.providedBy(items)):
+                not interfaces.IColumnSortedItems.providedBy(items)):
             items = ColumnSortedItems(items, self.items.sort_on)
         if interfaces.IColumnSortedItems.providedBy(items):
             items.setFormatter(self)
         self.items = items
+
 
 class AlternatingRowFormatterMixin(object):
     row_classes = ('even', 'odd')
@@ -469,21 +481,26 @@ class AlternatingRowFormatterMixin(object):
 class SortingFormatter(SortingFormatterMixin, Formatter):
     pass
 
+
 class AlternatingRowFormatter(AlternatingRowFormatterMixin, Formatter):
     pass
 
+
 class StandaloneSortFormatter(
-    SortingFormatterMixin, StandaloneSortFormatterMixin, Formatter):
+        SortingFormatterMixin, StandaloneSortFormatterMixin, Formatter):
     pass
+
 
 class FormSortFormatter(FormSortFormatterMixin, Formatter):
     pass
 
+
 class StandaloneFullFormatter(
-    SortingFormatterMixin, StandaloneSortFormatterMixin,
-    AlternatingRowFormatterMixin, Formatter):
+        SortingFormatterMixin, StandaloneSortFormatterMixin,
+        AlternatingRowFormatterMixin, Formatter):
     pass
 
+
 class FormFullFormatter(
-    FormSortFormatterMixin, AlternatingRowFormatterMixin, Formatter):
+        FormSortFormatterMixin, AlternatingRowFormatterMixin, Formatter):
     pass
