@@ -51,7 +51,7 @@ setup(
     },
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
-    description="Zope table",
+    description="Zope table implementation",
     long_description=(
         read('README.rst')
         + '\n\n' +
