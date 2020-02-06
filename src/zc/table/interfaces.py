@@ -30,12 +30,12 @@ class IColumn(interface.Interface):
                      u'configuration.  Must be unique within any set of '
                      u'columns passed to a table formatter.'),
         constraint=pythonLikeNameConstraint,
-        )
+    )
 
     title = schema.TextLine(
         title=u'Title',
         description=u'The title of the column, used in configuration dialogs.',
-        )
+    )
 
     def renderHeader(formatter):
         """Renders a table header.
@@ -123,7 +123,7 @@ class IFormatter(interface.Interface):
     request = schema.Field(
         title=u'Request',
         description=u'The request object.',
-        )
+    )
 
     context = schema.Field(
         title=u'Context',
@@ -144,13 +144,13 @@ class IFormatter(interface.Interface):
         'sorting.  The names of all columns must be unique within the '
         'sequence.',
         unique=True,
-        )
+    )
 
     visible_columns = schema.Tuple(
         title=u'The visible columns that make up this table.',
         description=u'The columns to display when rendering this table.',
         unique=True,
-        )
+    )
 
     batch_size = schema.Int(
         title=u'Number of rows per page',
@@ -158,19 +158,19 @@ class IFormatter(interface.Interface):
                     u'Set to 0 for no batching.',
         default=20,
         min=0,
-        )
+    )
 
     batch_start = schema.Int(
         title=u'Batch Start',
         description=u'The starting index for batching.',
         default=0,
-        )
+    )
 
     prefix = schema.BytesLine(
         title=u'Prefix',
         description=u'The prefix for all form names',
         constraint=pythonLikeNameConstraint,
-        )
+    )
 
     columns_by_name = schema.Dict(
         title=u'Columns by Name',

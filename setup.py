@@ -18,7 +18,7 @@ from setuptools import setup, find_packages
 
 
 def read(*rnames):
-    with  open(os.path.join(os.path.dirname(__file__), *rnames)) as f:
+    with open(os.path.join(os.path.dirname(__file__), *rnames)) as f:
         return f.read()
 
 
@@ -43,14 +43,12 @@ setup(
               'zope.testrunner',
               'zope.publisher']),
     packages=find_packages('src'),
-    package_dir= {'':'src'},
-
+    package_dir={'': 'src'},
     namespace_packages=['zc'],
-    package_data = {
-    '': ['*.txt', '*.rst', '*.zcml', '*.gif', '*.js'],
-    'zc.table':['resources/*', '*.pt'],
+    package_data={
+        '': ['*.txt', '*.rst', '*.zcml', '*.gif', '*.js'],
+        'zc.table': ['resources/*', '*.pt'],
     },
-
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     description="Zope table",
@@ -58,10 +56,10 @@ setup(
         read('README.rst')
         + '\n\n' +
         read('CHANGES.rst')
-        ),
+    ),
     license='ZPL 2.1',
     keywords="zope zope3",
-    classifiers = [
+    classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
@@ -80,4 +78,4 @@ setup(
         'Programming Language :: Python :: 3.8',
     ],
     zip_safe=False,
-    )
+)

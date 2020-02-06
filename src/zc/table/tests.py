@@ -88,8 +88,8 @@ class Py23OutputChecker(doctest.OutputChecker, object):
             example, got, optionflags)
 
 
-DOCTEST_FLAGS = (doctest.NORMALIZE_WHITESPACE|
-                 doctest.ELLIPSIS|
+DOCTEST_FLAGS = (doctest.NORMALIZE_WHITESPACE |
+                 doctest.ELLIPSIS |
                  doctest.IGNORE_EXCEPTION_DETAIL)
 
 
@@ -105,11 +105,11 @@ def test_suite():
             setUp=columnSetUp, tearDown=tearDown,
             optionflags=DOCTEST_FLAGS,
             checker=Py23OutputChecker(),
-            ),
+        ),
         doctest.DocFileSuite(
             'fieldcolumn.rst',
             setUp=fieldColumnSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE|doctest.ELLIPSIS,
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS,
             checker=Py23OutputChecker(),
-            ),
-        ))
+        ),
+    ))
