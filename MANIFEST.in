@@ -1,4 +1,8 @@
-include *.txt
 include *.rst
-include .travis.yml
+include *.txt
+include .coveragerc
 include buildout.cfg
+include tox.ini
+
+include .travis.yml
+exclude .travis.yml
