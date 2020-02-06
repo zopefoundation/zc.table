@@ -47,7 +47,7 @@ setup(
 
     namespace_packages=['zc'],
     package_data = {
-    '': ['*.txt', '*.zcml', '*.gif', '*.js'],
+    '': ['*.txt', '*.rst', '*.zcml', '*.gif', '*.js'],
     'zc.table':['resources/*', '*.pt'],
     },
 
@@ -55,9 +55,9 @@ setup(
     author_email='zope-dev@zope.org',
     description="Zope table",
     long_description=(
-        read('README.txt')
+        read('README.rst')
         + '\n\n' +
-        read('CHANGES.txt')
+        read('CHANGES.rst')
         ),
     license='ZPL 2.1',
     keywords="zope zope3",

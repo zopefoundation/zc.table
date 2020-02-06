@@ -96,18 +96,18 @@ DOCTEST_FLAGS = (doctest.NORMALIZE_WHITESPACE|
 def test_suite():
     return unittest.TestSuite((
         doctest.DocFileSuite(
-            'README.txt',
+            'README.rst',
             optionflags=DOCTEST_FLAGS,
             checker=Py23OutputChecker(),
         ),
         doctest.DocFileSuite(
-            'column.txt',
+            'column.rst',
             setUp=columnSetUp, tearDown=tearDown,
             optionflags=DOCTEST_FLAGS,
             checker=Py23OutputChecker(),
             ),
         doctest.DocFileSuite(
-            'fieldcolumn.txt',
+            'fieldcolumn.rst',
             setUp=fieldColumnSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE|doctest.ELLIPSIS,
             checker=Py23OutputChecker(),
