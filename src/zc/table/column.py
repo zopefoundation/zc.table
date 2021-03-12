@@ -28,9 +28,9 @@ from zc.table import interfaces
 
 
 if sys.version_info < (3,):
-    TEXT_TYPE = unicode
+    TEXT_TYPE = unicode  # noqa: F821 undefined name 'unicode'
 else:
-    TEXT_TYPE = str
+    TEXT_TYPE = str  # PY3
 
 
 @interface.implementer(interfaces.IColumn)

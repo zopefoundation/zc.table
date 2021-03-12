@@ -11,8 +11,9 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""HTML Table support
-
-$Id: __init__.py 1335 2005-04-19 05:21:10Z gary $
-"""
+"""HTML Table support."""
 from zc.table.table import Formatter
+
+__all__ = (
+    'Formatter',
+)
