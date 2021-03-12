@@ -40,7 +40,7 @@ class Formatter(zc.table.table.FormSortFormatterMixin,
             context, request, items, visible_column_names,
             batch_start, batch_size, prefix, columns,
             sort_on=sort_on,
-            )
+        )
 
     @property
     def batch_change_name(self):
@@ -57,20 +57,20 @@ class Formatter(zc.table.table.FormSortFormatterMixin,
         super(Formatter, self).setPrefix(prefix)
         self._batch_start_computed = False
 
-    @apply
-    def batch_start():
-        def fget(self):
-            if not self._batch_start_computed:
-                self.updateBatching()
-            return self._batch_start
+    @property
+    def batch_start(self):
+        if not self._batch_start_computed:
+            self.updateBatching()
+        return self._batch_start
 
-        def fset(self, value):
-            self._batch_start = value
-            self._batch_start_computed = False
+    @batch_start.setter
+    def batch_start(self, value):
+        self._batch_start = value
+        self._batch_start_computed = False
 
-        def fdel(self):
-            self._batch_start = None
-        return property(fget, fset, fdel)
+    @batch_start.deleter
+    def batch_start(self):
+        self._batch_start = None
 
     def updateBatching(self):
         request = self.request

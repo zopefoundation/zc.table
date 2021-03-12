@@ -4,7 +4,7 @@ CHANGES
 0.11 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Add support for Python 3.5, 3.7, 3.8 and 3.9.
 
 
 0.10.0 (2020-02-06)
