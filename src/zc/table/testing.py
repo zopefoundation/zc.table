@@ -15,7 +15,9 @@
 
 $Id: testing.py 2520 2005-06-27 21:26:18Z benji $
 """
-from zope import interface, component
+from zope import component
+from zope import interface
+
 import zc.table.interfaces
 import zc.table.table
 

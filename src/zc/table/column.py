@@ -15,14 +15,18 @@
 
 $Id: column.py 4318 2005-12-06 03:41:37Z gary $
 """
-import warnings
 import sys
+import warnings
 from base64 import b64encode
 from xml.sax.saxutils import quoteattr
 
-from zope import interface, component, schema, i18n
+from zope import component
+from zope import i18n
+from zope import interface
+from zope import schema
 from zope.formlib.interfaces import IInputWidget
-from zope.formlib.interfaces import WidgetInputError, WidgetsError
+from zope.formlib.interfaces import WidgetInputError
+from zope.formlib.interfaces import WidgetsError
 
 from zc.table import interfaces
 

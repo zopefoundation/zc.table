@@ -16,8 +16,9 @@
 from zope import interface
 from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 
-import zc.table.table
 import zc.table.interfaces
+import zc.table.table
+
 
 unspecified = object()
 

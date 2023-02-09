@@ -17,7 +17,9 @@ $Id: interfaces.py 4318 2005-12-06 03:41:37Z gary $
 """
 import re
 
-from zope import interface, schema
+from zope import interface
+from zope import schema
+
 
 pythonLikeNameConstraint = re.compile(r'^[a-zA-Z_]\w*$').match
 

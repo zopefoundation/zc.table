@@ -17,11 +17,12 @@ $Id: table.py 4428 2005-12-13 23:35:48Z gary $
 """
 from xml.sax.saxutils import quoteattr
 
-from zope import interface, component
+import zc.resourcelibrary
 import zope.cachedescriptors.property
+from zope import component
+from zope import interface
 
 from zc.table import interfaces
-import zc.resourcelibrary
 
 
 @interface.implementer(interfaces.IFormatter)

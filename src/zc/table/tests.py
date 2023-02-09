@@ -18,11 +18,13 @@ $Id: tests.py 4428 2005-12-13 23:35:48Z gary $
 import doctest
 import re
 import unittest
-from zope import component
-from zope.component.testing import setUp, tearDown
+
+import zope.formlib.widgets
 import zope.publisher.interfaces.browser
 import zope.schema.interfaces
-import zope.formlib.widgets
+from zope import component
+from zope.component.testing import setUp
+from zope.component.testing import tearDown
 
 
 def columnSetUp(test):

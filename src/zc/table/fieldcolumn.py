@@ -14,15 +14,17 @@
 import re
 from xml.sax.saxutils import quoteattr
 
-from zope import component
-import zope.schema.interfaces
-import zope.formlib.interfaces
 import zope.formlib.form
-
-from zope.formlib.interfaces import IInputWidget, IDisplayWidget
-from zope.formlib.interfaces import WidgetInputError, WidgetsError
+import zope.formlib.interfaces
+import zope.schema.interfaces
+from zope import component
+from zope.formlib.interfaces import IDisplayWidget
+from zope.formlib.interfaces import IInputWidget
+from zope.formlib.interfaces import WidgetInputError
+from zope.formlib.interfaces import WidgetsError
 
 from zc.table import column
+
 
 isSafe = re.compile(r'[\w +/]*$').match
 
