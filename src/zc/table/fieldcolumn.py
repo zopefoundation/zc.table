@@ -50,12 +50,12 @@ class BaseColumn(column.Column):
     def getPrefix(self, item, formatter):
         prefix = self.getId(item, formatter)
         if formatter.prefix:
-            prefix = '%s.%s' % (formatter.prefix, prefix)
+            prefix = '{}.{}'.format(formatter.prefix, prefix)
         return prefix
 
     @property
     def key(self):
-        return '%s.%s.%s' % (
+        return '{}.{}.{}'.format(
             self.__class__.__module__,
             self.__class__.__name__,
             self.name)
@@ -89,7 +89,7 @@ class FieldColumn(BaseColumn):
             title = self.field.field.title
         if not name and self.field.__name__:
             name = self.field.__name__
-        super(FieldColumn, self).__init__(title, name)
+        super().__init__(title, name)
 
     # subclass helper API (not expected to be overridden)
 
@@ -110,7 +110,7 @@ class FieldColumn(BaseColumn):
         else:
             widget = form_field.custom_widget(field, request)
         if form_field.prefix:  # this should not be necessary AFAICT
-            prefix = '%s.%s' % (prefix, form_field.prefix)
+            prefix = '{}.{}'.format(prefix, form_field.prefix)
         widget.setPrefix(prefix)
         return widget
 
@@ -172,10 +172,10 @@ class SubmitColumn(BaseColumn):
     # subclass helper API (not expected to be overridden)
 
     def getIdentifier(self, item, formatter):
-        return '%s.%s' % (self.getPrefix(item, formatter), self.name)
+        return '{}.{}'.format(self.getPrefix(item, formatter), self.name)
 
     def renderWidget(self, item, formatter, **kwargs):
-        res = ['%s=%s' % (k, quoteattr(v)) for k, v in kwargs.items()]
+        res = ['{}={}'.format(k, quoteattr(v)) for k, v in kwargs.items()]
         lbl = self.getLabel(item, formatter)
         res[0:0] = [
             'input',
@@ -187,7 +187,7 @@ class SubmitColumn(BaseColumn):
     # customization API (expected to be overridden)
 
     def getLabel(self, item, formatter):
-        return super(SubmitColumn, self).renderHeader(formatter)  # title
+        return super().renderHeader(formatter)  # title
 
     # basic API
 

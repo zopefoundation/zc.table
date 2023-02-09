@@ -28,6 +28,7 @@ setup(
     name="zc.table",
     version='1.0.dev0',
     url="https://github.com/zopefoundation/zc.table/",
+    python_requires='>=3.7',
     install_requires=[
         'setuptools',
         'zc.resourcelibrary >= 0.6',
@@ -52,7 +53,7 @@ setup(
         'zc.table': ['resources/*', '*.pt'],
     },
     author='Zope Foundation and Contributors',
-    author_email='zope-dev@zope.org',
+    author_email='zope-dev@zope.dev',
     description="Zope table implementation",
     long_description=(
         read('README.rst')

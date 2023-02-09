@@ -11,11 +11,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Useful predefined columns
-
-$Id: column.py 4318 2005-12-06 03:41:37Z gary $
-"""
-import sys
+"""Useful predefined columns."""
 import warnings
 from base64 import b64encode
 from xml.sax.saxutils import quoteattr
@@ -31,14 +27,8 @@ from zope.formlib.interfaces import WidgetsError
 from zc.table import interfaces
 
 
-if sys.version_info < (3,):
-    TEXT_TYPE = unicode  # noqa: F821 undefined name 'unicode'
-else:
-    TEXT_TYPE = str  # PY3
-
-
 @interface.implementer(interfaces.IColumn)
-class Column(object):
+class Column:
     title = None
     name = None
 
@@ -65,7 +55,7 @@ class SortingColumn(Column):
 
     def __init__(self, title=None, name=None, subsort=False):
         self.subsort = subsort
-        super(SortingColumn, self).__init__(title, name)
+        super().__init__(title, name)
 
     def _sort(self, items, formatter, start, stop, sorters, reverse=False):
         if self.subsort and sorters:
@@ -112,15 +102,15 @@ class GetterColumn(SortingColumn):
         if cell_formatter is not None:
             self.cell_formatter = cell_formatter
 
-        super(GetterColumn, self).__init__(title, name, subsort=subsort)
+        super().__init__(title, name, subsort=subsort)
 
     def getter(self, item, formatter):
         return item
 
     def cell_formatter(self, value, item, formatter):
-        return TEXT_TYPE(value).replace('&', '&#38;') \
-                               .replace('<', '&#60;') \
-                               .replace('>', '&#62;')
+        return str(value).replace('&', '&#38;') \
+                         .replace('<', '&#60;') \
+                         .replace('>', '&#62;')
 
     def renderCell(self, item, formatter):
         value = self.getter(item, formatter)
@@ -135,8 +125,8 @@ class GetterColumn(SortingColumn):
 
 class MailtoColumn(GetterColumn):
     def renderCell(self, item, formatter):
-        email = super(MailtoColumn, self).renderCell(item, formatter)
-        return '<a href="mailto:%s">%s</a>' % (email, email)
+        email = super().renderCell(item, formatter)
+        return '<a href="mailto:{}">{}</a>'.format(email, email)
 
 
 class FieldEditColumn(Column):
@@ -148,7 +138,7 @@ class FieldEditColumn(Column):
     def __init__(self, title=None, prefix=None, field=None,
                  idgetter=None, getter=None, setter=None, name='', bind=False,
                  widget_class=None, widget_extra=None):
-        super(FieldEditColumn, self).__init__(title, name)
+        super().__init__(title, name)
         assert prefix is not None  # this is required
         assert field is not None  # this is required
         assert idgetter is not None  # this is required
@@ -248,15 +238,14 @@ class SelectionColumn(FieldEditColumn):
         if title is None:
             title = field.title or ""
         self.hide_header = hide_header
-        super(SelectionColumn, self).__init__(field=field, prefix=prefix,
-                                              getter=getter, setter=setter,
-                                              idgetter=idgetter, title=title,
-                                              name=name)
+        super().__init__(field=field, prefix=prefix, getter=getter,
+                         setter=setter, idgetter=idgetter, title=title,
+                         name=name)
 
     def renderHeader(self, formatter):
         if self.hide_header:
             return ''
-        return super(SelectionColumn, self).renderHeader(formatter)
+        return super().renderHeader(formatter)
 
     def getSelected(self, items, request):
         """Return the items which were selected."""
@@ -269,7 +258,7 @@ class SubmitColumn(Column):
     def __init__(self, title=None, prefix=None, idgetter=None, action=None,
                  labelgetter=None, condition=None,
                  extra=None, cssClass=None, renderer=None, name=''):
-        super(SubmitColumn, self).__init__(title, name)
+        super().__init__(title, name)
         # hacked together. :-/
         assert prefix is not None  # this is required
         assert idgetter is not None  # this is required
@@ -290,7 +279,7 @@ class SubmitColumn(Column):
     def input(self, items, request):
         for item in items:
             id = self.makeId(item)
-            identifier = '%s.%s' % (self.prefix, id)
+            identifier = '{}.{}'.format(self.prefix, id)
             if identifier in request.form:
                 if self.condition is None or self.condition(item):
                     return id
@@ -308,19 +297,19 @@ class SubmitColumn(Column):
     def renderCell(self, item, formatter):
         if self.condition is None or self.condition(item):
             id = self.makeId(item)
-            identifier = '%s.%s' % (self.prefix, id)
+            identifier = '{}.{}'.format(self.prefix, id)
             if self.renderer is not None:
                 return self.renderer(
                     item, identifier, formatter, self.extra, self.cssClass)
             label = self.labelgetter(item, formatter)
             label = i18n.translate(
                 label, context=formatter.request, default=label)
-            val = "<input type='submit' name=%s value=%s %s" % (
+            val = "<input type='submit' name={} value={} {}".format(
                 quoteattr(identifier),
                 quoteattr(label),
                 self.extra and quoteattr(self.extra) or '')
             if self.cssClass:
-                val = "%s class=%s />" % (val, quoteattr(self.cssClass))
+                val = "{} class={} />".format(val, quoteattr(self.cssClass))
             else:
                 val += " />"
             return val

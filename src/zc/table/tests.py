@@ -11,12 +11,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""
-
-$Id: tests.py 4428 2005-12-13 23:35:48Z gary $
-"""
 import doctest
-import re
 import unittest
 
 import zope.formlib.widgets
@@ -69,27 +64,6 @@ def fieldColumnSetUp(test):
         zope.formlib.interfaces.IDisplayWidget)
 
 
-# Strip out u'' literals in doctests, adapted from
-# <https://stackoverflow.com/a/56507895>.
-class Py23OutputChecker(doctest.OutputChecker, object):
-
-    RE = re.compile(r"(\W|^)[uU]([rR]?[\'\"])", re.UNICODE)
-
-    def remove_u(self, want, got):
-        return (re.sub(self.RE, r'\1\2', want),
-                re.sub(self.RE, r'\1\2', got))
-
-    def check_output(self, want, got, optionflags):
-        want, got = self.remove_u(want, got)
-        return super(Py23OutputChecker, self).check_output(
-            want, got, optionflags)
-
-    def output_difference(self, example, got, optionflags):
-        example.want, got = self.remove_u(example.want, got)
-        return super(Py23OutputChecker, self).output_difference(
-            example, got, optionflags)
-
-
 DOCTEST_FLAGS = (doctest.NORMALIZE_WHITESPACE |
                  doctest.ELLIPSIS |
                  doctest.IGNORE_EXCEPTION_DETAIL)
@@ -100,18 +74,15 @@ def test_suite():
         doctest.DocFileSuite(
             'README.rst',
             optionflags=DOCTEST_FLAGS,
-            checker=Py23OutputChecker(),
         ),
         doctest.DocFileSuite(
             'column.rst',
             setUp=columnSetUp, tearDown=tearDown,
             optionflags=DOCTEST_FLAGS,
-            checker=Py23OutputChecker(),
         ),
         doctest.DocFileSuite(
             'fieldcolumn.rst',
             setUp=fieldColumnSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS,
-            checker=Py23OutputChecker(),
         ),
     ))

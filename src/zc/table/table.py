@@ -26,7 +26,7 @@ from zc.table import interfaces
 
 
 @interface.implementer(interfaces.IFormatter)
-class Formatter(object):
+class Formatter:
     items = None
 
     def __init__(self, context, request, items, visible_column_names=None,
@@ -65,7 +65,7 @@ class Formatter(object):
         return klass and ' class=%s' % quoteattr(klass) or ''
 
     def __call__(self):
-        return '\n<table%s>\n%s</table>\n%s' % (
+        return '\n<table{}>\n{}</table>\n{}'.format(
                 self._getCSSClass('table'), self.renderContents(),
                 self.renderExtra())
 
@@ -74,12 +74,12 @@ class Formatter(object):
         return ''
 
     def renderContents(self):
-        return '  <thead%s>\n%s  </thead>\n  <tbody>\n%s  </tbody>\n' % (
+        return '  <thead{}>\n{}  </thead>\n  <tbody>\n{}  </tbody>\n'.format(
                 self._getCSSClass('thead'), self.renderHeaderRow(),
                 self.renderRows())
 
     def renderHeaderRow(self):
-        return '    <tr%s>\n%s    </tr>\n' % (
+        return '    <tr{}>\n{}    </tr>\n'.format(
             self._getCSSClass('tr'), self.renderHeaders())
 
     def renderHeaders(self):
@@ -87,7 +87,7 @@ class Formatter(object):
             [self.renderHeader(col) for col in self.visible_columns])
 
     def renderHeader(self, column):
-        return '      <th%s>\n        %s\n      </th>\n' % (
+        return '      <th{}>\n        {}\n      </th>\n'.format(
             self._getCSSClass('th'), self.getHeader(column))
 
     def getHeaders(self):
@@ -105,7 +105,7 @@ class Formatter(object):
                    for column in self.visible_columns]
 
     def renderRow(self, item):
-        return '  <tr%s>\n%s  </tr>\n' % (
+        return '  <tr{}>\n{}  </tr>\n'.format(
             self._getCSSClass('tr'), self.renderCells(item))
 
     def renderCells(self, item):
@@ -113,8 +113,8 @@ class Formatter(object):
             [self.renderCell(item, col) for col in self.visible_columns])
 
     def renderCell(self, item, column):
-        return '    <td%s>\n      %s\n    </td>\n' % (
-            self._getCSSClass('td'), self.getCell(item, column),)
+        return '    <td{}>\n      {}\n    </td>\n'.format(
+            self._getCSSClass('td'), self.getCell(item, column))
 
     def getCells(self, item):
         return [self.getCell(item, column) for column in self.visible_columns]
@@ -147,7 +147,7 @@ class Formatter(object):
 # sorting helpers
 
 @interface.implementer(interfaces.IColumnSortedItems)
-class ColumnSortedItems(object):
+class ColumnSortedItems:
     # not intended to be persistent!
     """a wrapper for items that sorts lazily based on ISortableColumns.
 
@@ -318,7 +318,7 @@ def getSortOnName(prefix=None):
     return sort_on_name
 
 
-class SortingFormatterMixin(object):
+class SortingFormatterMixin:
     """automatically munges sort_on values with sort settings in the request.
     """
 
@@ -332,7 +332,7 @@ class SortingFormatterMixin(object):
         if sort_on or getattr(items, '__getitem__', None) is None:
             items = ColumnSortedItems(items, sort_on)
 
-        super(SortingFormatterMixin, self).__init__(
+        super().__init__(
             context, request, items, visible_column_names,
             batch_start, batch_size, prefix, columns)
 
@@ -348,7 +348,7 @@ class SortingFormatterMixin(object):
         self.items = items
 
 
-class AbstractSortFormatterMixin(object):
+class AbstractSortFormatterMixin:
     """provides sorting UI: concrete classes must declare script_name."""
 
     script_name = None  # Must be defined in subclass
@@ -422,7 +422,7 @@ class FormSortFormatterMixin(AbstractSortFormatterMixin):
         if sort_on or getattr(items, '__getitem__', None) is None:
             items = ColumnSortedItems(items, sort_on)
 
-        super(FormSortFormatterMixin, self).__init__(
+        super().__init__(
             context, request, items, visible_column_names,
             batch_start, batch_size, prefix, columns)
 
@@ -445,11 +445,11 @@ class FormSortFormatterMixin(AbstractSortFormatterMixin):
             value = ''
 
         sort_on_name = getSortOnName(self.prefix)
-        return '<input type="hidden" name=%s id=%s value=%s />\n' % (
+        return '<input type="hidden" name={} id={} value={} />\n'.format(
             quoteattr(sort_on_name+":tokens"),
             quoteattr(sort_on_name),
             quoteattr(value)
-            ) + super(FormSortFormatterMixin, self).renderExtra()
+            ) + super().renderExtra()
 
     def setItems(self, items):
         if (interfaces.IColumnSortedItems.providedBy(self.items) and
@@ -460,19 +460,19 @@ class FormSortFormatterMixin(AbstractSortFormatterMixin):
         self.items = items
 
 
-class AlternatingRowFormatterMixin(object):
+class AlternatingRowFormatterMixin:
     row_classes = ('even', 'odd')
 
     def renderRows(self):
         self.row = 0
-        return super(AlternatingRowFormatterMixin, self).renderRows()
+        return super().renderRows()
 
     def renderRow(self, item):
         self.row += 1
         klass = self.cssClasses.get('tr', '')
         if klass:
             klass += ' '
-        return '  <tr class=%s>\n%s  </tr>\n' % (
+        return '  <tr class={}>\n{}  </tr>\n'.format(
             quoteattr(klass + self.row_classes[self.row % 2]),
             self.renderCells(item))
 
