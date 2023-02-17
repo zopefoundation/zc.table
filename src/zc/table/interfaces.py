@@ -17,7 +17,9 @@ $Id: interfaces.py 4318 2005-12-06 03:41:37Z gary $
 """
 import re
 
-from zope import interface, schema
+from zope import interface
+from zope import schema
+
 
 pythonLikeNameConstraint = re.compile(r'^[a-zA-Z_]\w*$').match
 
@@ -25,16 +27,16 @@ pythonLikeNameConstraint = re.compile(r'^[a-zA-Z_]\w*$').match
 class IColumn(interface.Interface):
 
     name = schema.BytesLine(
-        title=u'Name',
-        description=(u'Name used for column in options of a table '
-                     u'configuration.  Must be unique within any set of '
-                     u'columns passed to a table formatter.'),
+        title='Name',
+        description=('Name used for column in options of a table '
+                     'configuration.  Must be unique within any set of '
+                     'columns passed to a table formatter.'),
         constraint=pythonLikeNameConstraint,
     )
 
     title = schema.TextLine(
-        title=u'Title',
-        description=u'The title of the column, used in configuration dialogs.',
+        title='Title',
+        description='The title of the column, used in configuration dialogs.',
     )
 
     def renderHeader(formatter):
@@ -108,8 +110,8 @@ class IColumnSortedItems(interface.Interface):
 class IFormatter(interface.Interface):
 
     annotations = schema.Dict(
-        title=u"Annotations",
-        description=u'Stores arbitrary application data under '
+        title="Annotations",
+        description='Stores arbitrary application data under '
         'package-unique keys. '
         'By "package-unique keys", we mean keys that are are unique by '
         'virtue of including the dotted name of a package as a prefix. '
@@ -121,25 +123,25 @@ class IFormatter(interface.Interface):
         ' "zc.foo"')
 
     request = schema.Field(
-        title=u'Request',
-        description=u'The request object.',
+        title='Request',
+        description='The request object.',
     )
 
     context = schema.Field(
-        title=u'Context',
-        description=u'The (Zope ILocation) context for which the table '
-        u'formatter is rendering')
+        title='Context',
+        description='The (Zope ILocation) context for which the table '
+        'formatter is rendering')
 
     items = schema.List(
-        title=u'Items',
-        description=u'The items that will be rendered by __call__.  items '
+        title='Items',
+        description='The items that will be rendered by __call__.  items '
         'preferably support a way to get a slice (__getitem__ or the '
         'deprecated getslice) or alternatively may merely be iterable.  '
         'see getItems.')
 
     columns = schema.Tuple(
-        title=u'All the columns that make up this table.',
-        description=u'All columns that may ever be a visible column.  A non-'
+        title='All the columns that make up this table.',
+        description='All columns that may ever be a visible column.  A non-'
         'visible column may still have an effect on operations such as '
         'sorting.  The names of all columns must be unique within the '
         'sequence.',
@@ -147,40 +149,40 @@ class IFormatter(interface.Interface):
     )
 
     visible_columns = schema.Tuple(
-        title=u'The visible columns that make up this table.',
-        description=u'The columns to display when rendering this table.',
+        title='The visible columns that make up this table.',
+        description='The columns to display when rendering this table.',
         unique=True,
     )
 
     batch_size = schema.Int(
-        title=u'Number of rows per page',
-        description=u'The number of rows to show at a time.  '
-                    u'Set to 0 for no batching.',
+        title='Number of rows per page',
+        description='The number of rows to show at a time.  '
+                    'Set to 0 for no batching.',
         default=20,
         min=0,
     )
 
     batch_start = schema.Int(
-        title=u'Batch Start',
-        description=u'The starting index for batching.',
+        title='Batch Start',
+        description='The starting index for batching.',
         default=0,
     )
 
     prefix = schema.BytesLine(
-        title=u'Prefix',
-        description=u'The prefix for all form names',
+        title='Prefix',
+        description='The prefix for all form names',
         constraint=pythonLikeNameConstraint,
     )
 
     columns_by_name = schema.Dict(
-        title=u'Columns by Name',
-        description=u'A mapping of column name to column object')
+        title='Columns by Name',
+        description='A mapping of column name to column object')
 
     cssClasses = schema.Dict(
-        title=u'CSS Classes',
-        description=u'A mapping from an HTML element to a CSS class',
-        key_type=schema.TextLine(title=u'The HTML element name'),
-        value_type=schema.TextLine(title=u'The CSS class name'))
+        title='CSS Classes',
+        description='A mapping from an HTML element to a CSS class',
+        key_type=schema.TextLine(title='The HTML element name'),
+        value_type=schema.TextLine(title='The CSS class name'))
 
     def __call__():
         """Render a complete HTML table from self.items."""

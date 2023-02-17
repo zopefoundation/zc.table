@@ -54,12 +54,12 @@ with names and email addresses:
     >>> import re
     >>> from zope import schema, interface
     >>> class IContact(interface.Interface):
-    ...     name = schema.TextLine(title=u'Name')
+    ...     name = schema.TextLine(title='Name')
     ...     email = schema.TextLine(
-    ...             title=u'Email Address',
+    ...             title='Email Address',
     ...             constraint=re.compile(r'\w+@\w+([.]\w+)+$').match)
     ...     salutation = schema.Choice(
-    ...             title=u'Salutation',
+    ...             title='Salutation',
     ...             values = ['Mr','Ms'],
     ...             )
 
@@ -221,7 +221,7 @@ because they already match the necessary constraints.
 
 If the request has input for a value, then this will override item data:
 
-    >>> request.form["test.4.email"] = u'walsh@zope.com'
+    >>> request.form["test.4.email"] = 'walsh@zope.com'
     >>> print(formatter())
     <table>
     <thead>
@@ -343,7 +343,7 @@ data, and for updating the undelying data:
 
     >>> data = columns[1].input(contacts, formatter)
     >>> data
-    {'4': u'walsh@zope.com'}
+    {'4': 'walsh@zope.com'}
 
 The data returned is a mapping from item id to input value.  Items
 that don't have input are ignored.  The data can be used with the
@@ -353,7 +353,7 @@ update function to update the underlying data:
     True
 
     >>> contacts[3].email
-    u'walsh@zope.com'
+    'walsh@zope.com'
 
 Note that the update function returns a boolean value indicating
 whether any changes were made:
@@ -364,13 +364,12 @@ whether any changes were made:
 The input function also validates input.  If there are any errors, a
 WidgetsError will be raised:
 
-    >>> request.form["test.4.email"] = u'walsh'
+    >>> request.form["test.4.email"] = 'walsh'
     >>> try:
     ...     data = columns[1].input(contacts, formatter)
     ... except zope.formlib.interfaces.WidgetsError as e:
     ...     e
-    WidgetInputError:
-        ('email', u'Email Address', ConstraintNotSatisfied(u'walsh', 'email'))
+    WidgetInputError: ('email', 'Email Address', ConstraintNotSatisfied('walsh', 'email'))
 
 Custom getters and setters
 --------------------------
@@ -395,8 +394,8 @@ a bit table:
     ...         item[1] = ((item[1] | mask) ^ mask) | value
 
     >>> columns = (
-    ...     BitColumn(schema.Bool(__name__='0', title=u'Bit 0'), 0),
-    ...     BitColumn(schema.Bool(__name__='1', title=u'Bit 1'), 1))
+    ...     BitColumn(schema.Bool(__name__='0', title='Bit 0'), 0),
+    ...     BitColumn(schema.Bool(__name__='1', title='Bit 1'), 1))
 
     >>> context = None # not needed
     >>> request = zope.publisher.browser.TestRequest()

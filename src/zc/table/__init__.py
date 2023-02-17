@@ -14,6 +14,7 @@
 """HTML Table support."""
 from zc.table.table import Formatter
 
+
 __all__ = (
     'Formatter',
 )

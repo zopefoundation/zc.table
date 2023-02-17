@@ -16,8 +16,9 @@
 from zope import interface
 from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 
-import zc.table.table
 import zc.table.interfaces
+import zc.table.table
+
 
 unspecified = object()
 
@@ -36,7 +37,7 @@ class Formatter(zc.table.table.FormSortFormatterMixin,
         if prefix is None:
             prefix = 'zc.table'
 
-        super(Formatter, self).__init__(
+        super().__init__(
             context, request, items, visible_column_names,
             batch_start, batch_size, prefix, columns,
             sort_on=sort_on,
@@ -54,7 +55,7 @@ class Formatter(zc.table.table.FormSortFormatterMixin,
     _batch_start_computed = False
 
     def setPrefix(self, prefix):
-        super(Formatter, self).setPrefix(prefix)
+        super().setPrefix(prefix)
         self._batch_start_computed = False
 
     @property
@@ -115,7 +116,7 @@ class Formatter(zc.table.table.FormSortFormatterMixin,
     def renderExtra(self):
         if not self._batch_start_computed:
             self.updateBatching()
-        return self.batching_template() + super(Formatter, self).renderExtra()
+        return self.batching_template() + super().renderExtra()
 
     def __call__(self):
         return ('\n'

@@ -135,7 +135,7 @@ Note that the input names include base64 encodings of the item ids.
 
 If the request has input for a value, then this will override item data:
 
-    >>> request.form["test.NA==.email"] = u'walsh@zope.com'
+    >>> request.form["test.NA==.email"] = 'walsh@zope.com'
     >>> print(formatter())
     <table>
     <thead>
@@ -202,7 +202,7 @@ data, and fpr updating the undelying data:
 
     >>> data = columns[1].input(contacts, request)
     >>> data
-    {'NA==': u'walsh@zope.com'}
+    {'NA==': 'walsh@zope.com'}
 
 The data returned is a mapping from item id to input value.  Items
 that don't have input are ignored.  The data can be used with the
@@ -212,7 +212,7 @@ update function to update the underlying data:
     True
 
     >>> contacts[3].email
-    u'walsh@zope.com'
+    'walsh@zope.com'
 
 Note that the update function returns a boolean value indicating
 whether any changes were made:
@@ -223,12 +223,12 @@ whether any changes were made:
 The input function also validates input.  If there are any errors, a
 WidgetsError will be raised:
 
-    >>> request.form["test.NA==.email"] = u'walsh'
+    >>> request.form["test.NA==.email"] = 'walsh'
     >>> data = columns[1].input(contacts, request)
     Traceback (most recent call last):
     ...
     zope.formlib.interfaces.WidgetsError: WidgetInputError:
-        ('email', u'', ConstraintNotSatisfied(u'walsh', 'email'))
+        ('email', '', ConstraintNotSatisfied('walsh', 'email'))
 
 
 Custom getters and setters

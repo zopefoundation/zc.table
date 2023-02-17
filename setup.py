@@ -14,7 +14,9 @@
 """Setup for zc.table package
 """
 import os
-from setuptools import setup, find_packages
+
+from setuptools import find_packages
+from setuptools import setup
 
 
 def read(*rnames):
@@ -24,8 +26,9 @@ def read(*rnames):
 
 setup(
     name="zc.table",
-    version='0.11.dev0',
+    version='1.0.dev0',
     url="https://github.com/zopefoundation/zc.table/",
+    python_requires='>=3.7',
     install_requires=[
         'setuptools',
         'zc.resourcelibrary >= 0.6',
@@ -50,7 +53,7 @@ setup(
         'zc.table': ['resources/*', '*.pt'],
     },
     author='Zope Foundation and Contributors',
-    author_email='zope-dev@zope.org',
+    author_email='zope-dev@zope.dev',
     description="Zope table implementation",
     long_description=(
         read('README.rst')
@@ -70,14 +73,12 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Framework :: Zope :: 3',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ],
     zip_safe=False,
 )
