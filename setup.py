@@ -26,7 +26,7 @@ def read(*rnames):
 
 setup(
     name="zc.table",
-    version='1.0.dev0',
+    version='1.0',
     url="https://github.com/zopefoundation/zc.table/",
     python_requires='>=3.7',
     install_requires=[
