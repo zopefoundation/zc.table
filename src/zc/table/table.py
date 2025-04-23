@@ -66,8 +66,8 @@ class Formatter:
 
     def __call__(self):
         return '\n<table{}>\n{}</table>\n{}'.format(
-                self._getCSSClass('table'), self.renderContents(),
-                self.renderExtra())
+            self._getCSSClass('table'), self.renderContents(),
+            self.renderExtra())
 
     def renderExtra(self):
         zc.resourcelibrary.need('zc.table')
@@ -75,8 +75,8 @@ class Formatter:
 
     def renderContents(self):
         return '  <thead{}>\n{}  </thead>\n  <tbody>\n{}  </tbody>\n'.format(
-                self._getCSSClass('thead'), self.renderHeaderRow(),
-                self.renderRows())
+            self._getCSSClass('thead'), self.renderHeaderRow(),
+            self.renderRows())
 
     def renderHeaderRow(self):
         return '    <tr{}>\n{}    </tr>\n'.format(
@@ -446,10 +446,10 @@ class FormSortFormatterMixin(AbstractSortFormatterMixin):
 
         sort_on_name = getSortOnName(self.prefix)
         return '<input type="hidden" name={} id={} value={} />\n'.format(
-            quoteattr(sort_on_name+":tokens"),
+            quoteattr(sort_on_name + ":tokens"),
             quoteattr(sort_on_name),
             quoteattr(value)
-            ) + super().renderExtra()
+        ) + super().renderExtra()
 
     def setItems(self, items):
         if (interfaces.IColumnSortedItems.providedBy(self.items) and

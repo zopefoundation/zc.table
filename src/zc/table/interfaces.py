@@ -11,10 +11,6 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""table package interfaces
-
-$Id: interfaces.py 4318 2005-12-06 03:41:37Z gary $
-"""
 import re
 
 from zope import interface

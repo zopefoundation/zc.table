@@ -126,7 +126,7 @@ class GetterColumn(SortingColumn):
 class MailtoColumn(GetterColumn):
     def renderCell(self, item, formatter):
         email = super().renderCell(item, formatter)
-        return '<a href="mailto:{}">{}</a>'.format(email, email)
+        return f'<a href="mailto:{email}">{email}</a>'
 
 
 class FieldEditColumn(Column):
@@ -232,9 +232,9 @@ class SelectionColumn(FieldEditColumn):
             else:
                 prefix = 'selection_column'
         if getter is None:
-            getter = lambda item: False  # noqa
+            def getter(item): return False  # noqa
         if setter is None:
-            setter = lambda item, value: None  # noqa
+            def setter(item, value): return None  # noqa
         if title is None:
             title = field.title or ""
         self.hide_header = hide_header
@@ -279,7 +279,7 @@ class SubmitColumn(Column):
     def input(self, items, request):
         for item in items:
             id = self.makeId(item)
-            identifier = '{}.{}'.format(self.prefix, id)
+            identifier = f'{self.prefix}.{id}'
             if identifier in request.form:
                 if self.condition is None or self.condition(item):
                     return id
@@ -297,7 +297,7 @@ class SubmitColumn(Column):
     def renderCell(self, item, formatter):
         if self.condition is None or self.condition(item):
             id = self.makeId(item)
-            identifier = '{}.{}'.format(self.prefix, id)
+            identifier = f'{self.prefix}.{id}'
             if self.renderer is not None:
                 return self.renderer(
                     item, identifier, formatter, self.extra, self.cssClass)
@@ -309,7 +309,7 @@ class SubmitColumn(Column):
                 quoteattr(label),
                 self.extra and quoteattr(self.extra) or '')
             if self.cssClass:
-                val = "{} class={} />".format(val, quoteattr(self.cssClass))
+                val = f"{val} class={quoteattr(self.cssClass)} />"
             else:
                 val += " />"
             return val

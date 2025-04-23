@@ -50,7 +50,7 @@ class BaseColumn(column.Column):
     def getPrefix(self, item, formatter):
         prefix = self.getId(item, formatter)
         if formatter.prefix:
-            prefix = '{}.{}'.format(formatter.prefix, prefix)
+            prefix = f'{formatter.prefix}.{prefix}'
         return prefix
 
     @property
@@ -110,7 +110,7 @@ class FieldColumn(BaseColumn):
         else:
             widget = form_field.custom_widget(field, request)
         if form_field.prefix:  # this should not be necessary AFAICT
-            prefix = '{}.{}'.format(prefix, form_field.prefix)
+            prefix = f'{prefix}.{form_field.prefix}'
         widget.setPrefix(prefix)
         return widget
 
@@ -172,10 +172,10 @@ class SubmitColumn(BaseColumn):
     # subclass helper API (not expected to be overridden)
 
     def getIdentifier(self, item, formatter):
-        return '{}.{}'.format(self.getPrefix(item, formatter), self.name)
+        return f'{self.getPrefix(item, formatter)}.{self.name}'
 
     def renderWidget(self, item, formatter, **kwargs):
-        res = ['{}={}'.format(k, quoteattr(v)) for k, v in kwargs.items()]
+        res = [f'{k}={quoteattr(v)}' for k, v in kwargs.items()]
         lbl = self.getLabel(item, formatter)
         res[0:0] = [
             'input',
