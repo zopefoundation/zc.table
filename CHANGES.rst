@@ -4,7 +4,7 @@ CHANGES
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Drop support for Python 3.7, 3.8.
 
 
 1.0 (2023-02-17)
