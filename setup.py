@@ -28,7 +28,7 @@ setup(
     name="zc.table",
     version='1.1.dev0',
     url="https://github.com/zopefoundation/zc.table/",
-    python_requires='>=3.7',
+    python_requires='>=3.9',
     install_requires=[
         'setuptools',
         'zc.resourcelibrary >= 0.6',
@@ -60,7 +60,7 @@ setup(
         + '\n\n' +
         read('CHANGES.rst')
     ),
-    license='ZPL 2.1',
+    license='ZPL-2.1',
     keywords="zope zope3",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -74,11 +74,11 @@ setup(
         'Framework :: Zope :: 3',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
     ],
     zip_safe=False,
 )
