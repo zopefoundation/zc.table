@@ -232,9 +232,11 @@ class SelectionColumn(FieldEditColumn):
             else:
                 prefix = 'selection_column'
         if getter is None:
-            def getter(item): return False  # noqa
+            def getter(item):
+                return False
         if setter is None:
-            def setter(item, value): return None  # noqa
+            def setter(item, value):
+                return None
         if title is None:
             title = field.title or ""
         self.hide_header = hide_header
